@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>H1DD3N OBFUSCATER</title>
+    <title>H1DD3N PROTECTER</title>
     <style>
         body { background: #000; color: #8a2be2; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
         .box { background: #0a0a0a; padding: 25px; border: 1px solid #8a2be2; width: 90%; max-width: 600px; text-align: center; border-radius: 10px; box-shadow: 0 0 15px #8a2be2; z-index: 2; }
@@ -19,7 +19,7 @@
     </audio>
 
     <div class="box">
-        <h2 style="letter-spacing: 3px;">H1DD3N OBFUSCATER</h2>
+        <h2 style="letter-spacing: 3px;">H1DD3N PROTECTER</h2>
         <textarea id="input" placeholder="-- Paste your Lua Code here..."></textarea>
         <button class="gen-btn" onclick="generate()">GENERATE LOADSTRING</button>
         <p id="status">Secure Session: Ready</p>
@@ -30,11 +30,11 @@
     </div>
 
     <script>
-        // Music Autoplay Fix: Starts on first click
+        // Start audio on first user interaction
         document.addEventListener('click', () => {
             const audio = document.getElementById('bgMusic');
             if (audio.paused) {
-                audio.volume = 0.4;
+                audio.volume = 0.5;
                 audio.play();
             }
         }, { once: true });
