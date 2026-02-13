@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUA SHIELD | Obfuscator</title>
+    <style>
+        body { 
+            background: #0f0f0f; 
+            color: #ffffff; 
+            font-family: 'Segoe UI', sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        .container {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+            width: 80%;
+            max-width: 800px;
+            text-align: center;
+        }
+        h1 { color: #8a2be2; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+        textarea { 
+            width: 100%; 
+            height: 250px; 
+            background: #252525; 
+            color: #00ff41; 
+            border: 1px solid #333; 
+            border-radius: 8px; 
+            padding: 15px; 
+            font-family: 'Consolas', monospace; 
+            resize: none;
+            box-sizing: border-box;
+        }
+        .buttons { margin-top: 20px; }
+        button { 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 6px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            margin: 0 10px;
+        }
+        .btn-obf { background: #8a2be2; color: white; }
+        .btn-obf:hover { background: #a042ff; }
+        .btn-raw { background: #ffffff; color: #000; display: none; }
+        #status { margin-top: 15px; font-size: 14px; color: #888; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Lua Shield</h1>
+        <textarea id="luaInput" placeholder="-- Paste your Lua script here..."></textarea>
+        
+        <div class="buttons">
+            <button class="btn-obf" onclick="obfuscate()">Obfuscate</button>
+            <button id="rawBtn" class="btn-raw" onclick="copyRaw()">Copy Raw URL</button>
+        </div>
+
+        <p id="status">Status: Waiting for input...</p>
+    </div>
+
+    <script>
+        async function obfuscate() {
+            const code = document.getElementById('luaInput').value;
+            const status = document.getElementById('status');
+            const rawBtn = document.getElementById('rawBtn');
+
+            if (!code) return alert("Please paste some code!");
+
+            status.innerText = "Status: Processing...";
+
+            try {
+                const response = await fetch('/obfuscate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lua: code })
+                });
+
+                if (response.ok) {
+                    status.innerText = "Status: Obfuscated Successfully!";
+                    status.style.color = "#00ff41";
+                    rawBtn.style.display = "inline-block";
+                } else {
+                    status.innerText = "Status: Error processing code.";
+                }
+            } catch (err) {
+                status.innerText = "Status: Server error. Check if Node is running!";
+            }
+        }
+
+        function copyRaw() {
+            // This gets the current website URL and adds /raw/temp-file to the end
+            const rawUrl = window.location.origin + "/raw/temp-file";
+            navigator.clipboard.writeText(rawUrl);
+            alert("URL Copied!\n\nUse this in Roblox:\nloadstring(game:HttpGet('" + rawUrl + "'))()");
+        }
+    </script>
+</body>
+</html>
