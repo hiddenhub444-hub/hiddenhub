@@ -2,19 +2,19 @@ const express = require('express');
 const app = express();
 const path = require('path');
 
-// Middleware to handle JSON and serve your static files from the 'public' folder
+// Middleware to handle JSON and serve static files
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// This variable stores the code in the computer's memory temporarily
+// This variable stores the code in the computer's memory
 let savedCode = "-- No code obfuscated yet";
 
-// 1. This sends your index.html GUI to anyone who visits the main link
+// 1. Sends the GUI to the user
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// 2. This handles the Obfuscation request from the GUI
+// 2. Handles the Obfuscation request
 app.post('/obfuscate', (req, res) => {
     const userLua = req.body.lua;
 
@@ -22,18 +22,24 @@ app.post('/obfuscate', (req, res) => {
         return res.status(400).send("No code provided");
     }
 
-    // Simple Base64 encoding logic
+    // Base64 encoding logic
     const encoded = Buffer.from(userLua).toString('base64');
     
-    // Formatting the string that Roblox will eventually read
+    // Formatting the string for the Roblox side
     savedCode = `--[[ Obfuscated by HiddenHub ]]\nloadstring(game:HttpGet("https://raw.githubusercontent.com/re-base64-logic"))\n--[[ DATA: ${encoded} ]]`;
     
     res.sendStatus(200);
 });
 
-// 3. This handles the "Raw" request that your Roblox script will call
+// 3. The "Raw" endpoint for Roblox (CRITICAL FIXES HERE)
 app.get('/raw/temp-file', (req, res) => {
-    res.set('Content-Type', 'text/plain');
+    // These headers ensure the executor gets fresh code every time
+    res.set({
+        'Content-Type': 'text/plain',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+    });
     res.send(savedCode);
 });
 
