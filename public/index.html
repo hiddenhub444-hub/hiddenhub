@@ -1,44 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>H1DD3N PANEL</title>
+    <title>H1DD3N OBFUSCATER</title>
     <style>
         body { background: #000; color: #8a2be2; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { background: #0a0a0a; padding: 20px; border: 1px solid #8a2be2; width: 90%; max-width: 600px; text-align: center; }
-        textarea { width: 100%; height: 200px; background: #000; color: #0f0; border: 1px solid #333; margin-bottom: 10px; }
-        #rawBtn { background: #8a2be2; color: white; padding: 10px 20px; border: none; cursor: pointer; display: none; text-decoration: none; font-weight: bold; }
-        #status { color: #555; font-size: 12px; margin-top: 10px; }
+        .box { background: #0a0a0a; padding: 25px; border: 1px solid #8a2be2; width: 90%; max-width: 600px; text-align: center; border-radius: 10px; box-shadow: 0 0 15px #8a2be2; }
+        textarea { width: 100%; height: 250px; background: #000; color: #0f0; border: 1px solid #333; margin-bottom: 15px; padding: 10px; box-sizing: border-box; }
+        .gen-btn { background: #8a2be2; color: white; padding: 12px 25px; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; width: 100%; }
+        .gen-btn:hover { background: #a042ff; box-shadow: 0 0 10px #a042ff; }
+        #status { color: #555; font-size: 13px; margin-top: 15px; }
+        .discord-link { margin-top: 20px; display: block; text-decoration: none; color: #7289da; font-weight: bold; font-size: 14px; }
+        .discord-link img { vertical-align: middle; width: 24px; margin-right: 8px; }
     </style>
 </head>
 <body>
     <div class="box">
-        <h2>H1DD3N SCRIPT GEN</h2>
-        <textarea id="input" placeholder="Paste Lua Code Here..."></textarea><br>
-        <button id="genBtn" onclick="generate()" style="background:#222; color:#fff; padding: 10px;">Create Raw Link</button>
-        <a id="rawBtn" target="_blank">OPEN RAW LINK</a>
-        <p id="status">Secure Session Active</p>
+        <h2 style="letter-spacing: 3px;">H1DD3N OBFUSCATER</h2>
+        <textarea id="input" placeholder="-- Paste your Lua Code here..."></textarea>
+        <button class="gen-btn" onclick="generate()">GENERATE LOADSTRING</button>
+        
+        <p id="status">Secure Session: Ready</p>
+
+        <a href="https://discord.gg/8Pb8sxaS" target="_blank" class="discord-link">
+            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
+            JOIN THE DISCORD
+        </a>
     </div>
 
     <script>
         async function generate() {
             const code = document.getElementById('input').value;
-            if(!code) return;
+            const status = document.getElementById('status');
+            if(!code) return alert("Paste some code first!");
 
-            const response = await fetch('/generate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ lua: code })
-            });
+            status.innerText = "Status: Generating...";
 
-            const data = await response.json();
-            const rawUrl = window.location.origin + "/raw/" + data.id;
-            
-            const btn = document.getElementById('rawBtn');
-            btn.href = rawUrl;
-            btn.style.display = 'inline-block';
-            
-            navigator.clipboard.writeText('loadstring(game:HttpGet("' + rawUrl + '"))()');
-            alert("Loadstring copied to clipboard!");
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lua: code })
+                });
+
+                const data = await response.json();
+                const rawUrl = window.location.origin + "/raw/" + data.id;
+                
+                // Automatically copy the loadstring to clipboard
+                const loadstring = 'loadstring(game:HttpGet("' + rawUrl + '"))()';
+                await navigator.clipboard.writeText(loadstring);
+                
+                status.innerText = "Status:  COPIED!";
+                status.style.color = "#0f0";
+                alert("Successfully Generated!\n\nLoadstring copied to clipboard.");
+            } catch (err) {
+                status.innerText = "Status: Error generating link.";
+                status.style.color = "red";
+            }
         }
     </script>
 </body>
