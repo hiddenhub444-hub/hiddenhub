@@ -70,7 +70,8 @@
 
     <script>
         async function obfuscate() {
-            const code = document.getElementById('luaInput').value;
+            const inputArea = document.getElementById('luaInput');
+            const code = inputArea.value;
             const status = document.getElementById('status');
             const rawBtn = document.getElementById('rawBtn');
 
@@ -79,6 +80,7 @@
             status.innerText = "Status: Processing...";
 
             try {
+                // Send the code to the server
                 const response = await fetch('/obfuscate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -86,6 +88,13 @@
                 });
 
                 if (response.ok) {
+                    // Immediately fetch the obfuscated version back
+                    const rawResponse = await fetch('/raw/temp-file');
+                    const obfuscatedCode = await rawResponse.text();
+                    
+                    // Update the text box with the new code
+                    inputArea.value = obfuscatedCode;
+                    
                     status.innerText = "Status: Obfuscated Successfully!";
                     status.style.color = "#00ff41";
                     rawBtn.style.display = "inline-block";
@@ -93,12 +102,11 @@
                     status.innerText = "Status: Error processing code.";
                 }
             } catch (err) {
-                status.innerText = "Status: Server error. Check if Node is running!";
+                status.innerText = "Status: Server error. Make sure Vercel is live!";
             }
         }
 
         function copyRaw() {
-            // This gets the current website URL and adds /raw/temp-file to the end
             const rawUrl = window.location.origin + "/raw/temp-file";
             navigator.clipboard.writeText(rawUrl);
             alert("URL Copied!\n\nUse this in Roblox:\nloadstring(game:HttpGet('" + rawUrl + "'))()");
