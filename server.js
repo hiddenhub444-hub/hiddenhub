@@ -1,50 +1,48 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const crypto = require('crypto'); // Built-in for generating random IDs
 
-// Middleware to handle JSON and serve static files
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// This variable stores the code in the computer's memory
-let savedCode = "-- No code obfuscated yet";
+// This stores all scripts: { "a1b2c3": "print('hello')" }
+const scriptDatabase = new Map();
 
-// 1. Sends the GUI to the user
+// 1. Protection: Stop people from seeing the main page
 app.get('/', (req, res) => {
+    res.status(403).send('<body style="background:black;color:red;display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;"><h1>ACCESS DENIED BY H1DD3N</h1></body>');
+});
+
+// 2. Secret Admin Route: Use this to actually access your GUI
+// Go to your-site.vercel.app/admin-panel to use the tool
+app.get('/admin-panel', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// 2. Handles the Obfuscation request
-app.post('/obfuscate', (req, res) => {
+// 3. Create a unique link
+app.post('/generate', (req, res) => {
     const userLua = req.body.lua;
+    if (!userLua) return res.status(400).send("No code");
 
-    if (!userLua) {
-        return res.status(400).send("No code provided");
+    // Create a random ID like '7f3a1b'
+    const id = crypto.randomBytes(4).toString('hex');
+    scriptDatabase.set(id, userLua);
+
+    res.json({ id: id });
+});
+
+// 4. The Raw Link for Roblox
+app.get('/raw/:id', (req, res) => {
+    const script = scriptDatabase.get(req.params.id);
+    
+    if (script) {
+        res.set('Content-Type', 'text/plain');
+        res.send(script);
+    } else {
+        res.status(403).send('ACCESS DENIED BY H1DD3N');
     }
-
-    // Base64 encoding logic
-    const encoded = Buffer.from(userLua).toString('base64');
-    
-    // Formatting the string for the Roblox side
-    savedCode = `--[[ Obfuscated by HiddenHub ]]\nloadstring(game:HttpGet("https://raw.githubusercontent.com/re-base64-logic"))\n--[[ DATA: ${encoded} ]]`;
-    
-    res.sendStatus(200);
 });
 
-// 3. The "Raw" endpoint for Roblox (CRITICAL FIXES HERE)
-app.get('/raw/temp-file', (req, res) => {
-    // These headers ensure the executor gets fresh code every time
-    res.set({
-        'Content-Type': 'text/plain',
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
-    });
-    res.send(savedCode);
-});
-
-// Start the server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Shield Active on ${PORT}`));
