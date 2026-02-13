@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>H1DD3N PROTECTER</title>
+    <title>H1DD3N OBFUSCATER</title>
     <style>
-        body { background: #000; color: #8a2be2; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { background: #0a0a0a; padding: 25px; border: 1px solid #8a2be2; width: 90%; max-width: 600px; text-align: center; border-radius: 10px; box-shadow: 0 0 15px #8a2be2; }
+        body { background: #000; color: #8a2be2; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        .box { background: #0a0a0a; padding: 25px; border: 1px solid #8a2be2; width: 90%; max-width: 600px; text-align: center; border-radius: 10px; box-shadow: 0 0 15px #8a2be2; z-index: 2; }
         textarea { width: 100%; height: 250px; background: #000; color: #0f0; border: 1px solid #333; margin-bottom: 15px; padding: 10px; box-sizing: border-box; }
         .gen-btn { background: #8a2be2; color: white; padding: 12px 25px; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; width: 100%; }
         .gen-btn:hover { background: #a042ff; box-shadow: 0 0 10px #a042ff; }
@@ -14,13 +14,15 @@
     </style>
 </head>
 <body>
+    <audio id="bgMusic" loop>
+        <source src="https://files.catbox.moe/p4bwn1.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="box">
-        <h2 style="letter-spacing: 3px;">H1DD3N PROTECTER</h2>
+        <h2 style="letter-spacing: 3px;">H1DD3N OBFUSCATER</h2>
         <textarea id="input" placeholder="-- Paste your Lua Code here..."></textarea>
         <button class="gen-btn" onclick="generate()">GENERATE LOADSTRING</button>
-        
         <p id="status">Secure Session: Ready</p>
-
         <a href="https://discord.gg/8Pb8sxaS" target="_blank" class="discord-link">
             <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
             JOIN THE DISCORD
@@ -28,6 +30,15 @@
     </div>
 
     <script>
+        // Music Autoplay Fix: Starts on first click
+        document.addEventListener('click', () => {
+            const audio = document.getElementById('bgMusic');
+            if (audio.paused) {
+                audio.volume = 0.4;
+                audio.play();
+            }
+        }, { once: true });
+
         async function generate() {
             const code = document.getElementById('input').value;
             const status = document.getElementById('status');
@@ -42,18 +53,18 @@
                     body: JSON.stringify({ lua: code })
                 });
 
+                if (!response.ok) throw new Error();
+
                 const data = await response.json();
                 const rawUrl = window.location.origin + "/raw/" + data.id;
-                
-                // Automatically copy the loadstring to clipboard
                 const loadstring = 'loadstring(game:HttpGet("' + rawUrl + '"))()';
-                await navigator.clipboard.writeText(loadstring);
                 
-                status.innerText = "Status:  COPIED!";
+                await navigator.clipboard.writeText(loadstring);
+                status.innerText = "Status: LOADSTRING COPIED!";
                 status.style.color = "#0f0";
                 alert("Successfully Generated!\n\nLoadstring copied to clipboard.");
             } catch (err) {
-                status.innerText = "Status: Error generating link.";
+                status.innerText = "Status: Error (Server waking up, try again!)";
                 status.style.color = "red";
             }
         }
