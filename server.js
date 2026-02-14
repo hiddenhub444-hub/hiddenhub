@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 let scriptDatabase = new Map();
-const ADMIN_PASSWORD = "ENTER_YOUR_PASSWORD_HERE"; // Set your password here!
+const ADMIN_PASSWORD = "sufyanhidden1x1x1"; // Set your password here!
 
 // FIXED OBFUSCATOR: This now uses the correct Roblox syntax
 function obfuscate(code) {
@@ -94,3 +94,4 @@ app.get('/raw/:id', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("H1DD3N PROTECTS LIVE"));
+
