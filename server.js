@@ -7,41 +7,62 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 const scriptDatabase = new Map();
+const logs = []; // This stores the history of what people put in
+const ADMIN_PASSWORD = "sufyanhidden1x1x1"; // CHANGE THIS!
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// 1. The script generator
 app.post('/generate', (req, res) => {
     const userLua = req.body.lua;
     if (!userLua) return res.status(400).send("No code");
 
     const id = crypto.randomBytes(4).toString('hex');
     scriptDatabase.set(id, userLua);
+    
+    // Save to logs with a timestamp
+    logs.push({
+        time: new Date().toLocaleString(),
+        content: userLua,
+        id: id
+    });
+
     res.json({ id: id });
 });
 
-// Secure Raw endpoint
+// 2. THE SECRET DASHBOARD
+app.get('/h1dd3n-logs', (req, res) => {
+    const pass = req.query.password;
+    if (pass !== ADMIN_PASSWORD) {
+        return res.status(403).send("ACCESS DENIED BY H1DD3N");
+    }
+
+    let html = `<html><body style="background:#000;color:#0f0;font-family:monospace;padding:20px;">`;
+    html += `<h1>H1DD3N LOGS PANEL</h1><hr>`;
+    
+    logs.reverse().forEach(log => {
+        html += `<div style="border:1px solid #8a2be2;padding:10px;margin-bottom:10px;">
+                    <p><strong>Time:</strong> ${log.time} | <strong>ID:</strong> ${log.id}</p>
+                    <pre style="background:#111;padding:10px;color:#8a2be2;">${log.content}</pre>
+                 </div>`;
+    });
+
+    html += `</body></html>`;
+    res.send(html);
+});
+
+// 3. Raw endpoint for Roblox
 app.get('/raw/:id', (req, res) => {
     const script = scriptDatabase.get(req.params.id);
     const userAgent = req.headers['user-agent'] || "";
 
-    // ONLY allow Roblox to see the code
     if (script && userAgent.includes("Roblox")) {
-        res.set({
-            'Content-Type': 'text/plain',
-            'Cache-Control': 'no-cache'
-        });
+        res.set({'Content-Type': 'text/plain', 'Cache-Control': 'no-cache'});
         res.send(script);
     } else {
-        // Show this to everyone else in a browser
-        res.status(403).send(`
-            <body style="background:black;color:red;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;font-family:monospace;margin:0;">
-                <h1 style="font-size:50px;border:2px solid red;padding:20px;">ACCESS DENIED BY H1DD3N</h1>
-                <p style="color:#555;">UNAUTHORIZED_VIEW_PROTECTION_ENABLED</p>
-                <a href="https://discord.gg/8Pb8sxaS" style="color:#8a2be2;text-decoration:none;margin-top:20px;">Join Discord for Access</a>
-            </body>
-        `);
+        res.status(403).send("ACCESS DENIED BY H1DD3N");
     }
 });
 
