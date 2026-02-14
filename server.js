@@ -8,7 +8,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const scriptDatabase = new Map();
 // Add your Discord ID here as the first whitelisted user
-let whitelistedIDs = ["YOUR_DISCORD_ID"]; 
+let whitelistedIDs = ["1413219137932759060"]; 
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -82,3 +82,4 @@ app.get('/raw/:id', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("H1DD3N PROTECTS ACTIVE"));
+
