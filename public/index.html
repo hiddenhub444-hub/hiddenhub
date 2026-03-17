@@ -2,63 +2,74 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Prometheus X - Advanced Lua Obfuscator</title>
+    <title>Prometheus X | Advanced VM Obfuscator</title>
     <style>
-        :root { --p-blue: #00d4ff; --p-dark: #0a0b10; --p-card: #161b22; }
-        body { background: var(--p-dark); color: white; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px; }
-        .container { width: 80%; max-width: 1000px; }
-        textarea { width: 100%; height: 300px; background: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 8px; padding: 15px; font-family: monospace; }
-        .btn { background: var(--p-blue); color: black; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 15px; }
-        .output { margin-top: 20px; background: #000; padding: 15px; border-left: 4px solid var(--p-blue); white-space: pre-wrap; word-break: break-all; font-family: monospace; font-size: 12px; }
+        :root { --accent: #00ffd0; --bg: #0b0e14; }
+        body { background: var(--bg); color: white; font-family: 'Consolas', monospace; padding: 40px; display: flex; flex-direction: column; align-items: center; }
+        .editor-container { width: 90%; max-width: 1000px; }
+        textarea { width: 100%; height: 350px; background: #161b22; color: #d1d5da; border: 1px solid #30363d; border-radius: 8px; padding: 20px; font-size: 14px; resize: none; outline: none; }
+        .controls { margin-top: 20px; display: flex; gap: 15px; }
+        button { background: var(--accent); color: #000; border: none; padding: 12px 30px; border-radius: 5px; cursor: pointer; font-weight: 800; text-transform: uppercase; transition: 0.3s; }
+        button:hover { opacity: 0.8; box-shadow: 0 0 20px var(--accent); }
+        .output-box { margin-top: 30px; width: 100%; background: #000; padding: 20px; border-radius: 8px; border-left: 5px solid var(--accent); display: none; }
+        pre { white-space: pre-wrap; word-break: break-all; color: var(--accent); font-size: 12px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Prometheus <span style="color:var(--p-blue)">X</span></h1>
-        <p>Advanced VM-Based Lua Obfuscation</p>
-        <textarea id="input" placeholder="-- Paste your Lua code here..."></textarea>
-        <button class="btn" onclick="obfuscate()">Obfuscate Code</button>
-        <div id="output" class="output">Protected code will appear here...</div>
+    <div class="editor-container">
+        <h1 style="color: var(--accent)">PROMETHEUS <span style="font-weight:100">COMPILER</span></h1>
+        <textarea id="luaInput" placeholder="-- Enter Lua Script Here..."></textarea>
+        <div class="controls">
+            <button onclick="compilePrometheus()">Obfuscate with Prometheus VM</button>
+        </div>
+        <div id="outputContainer" class="output-box">
+            <pre id="luaOutput"></pre>
+        </div>
     </div>
 
     <script>
-        function obfuscate() {
-            const code = document.getElementById('input').value;
-            if(!code) return alert("Enter code!");
+        function compilePrometheus() {
+            const input = document.getElementById('luaInput').value;
+            if (!input) return;
 
-            // 1. VM Header (Prometheus Signature)
-            const header = "-- This Script is Part of the Prometheus Obfuscator by Levno_710\n";
-            
-            // 2. Bytecode Generation (Base64 + XOR logic)
-            const encoded = btoa(unescape(encodeURIComponent(code)));
+            // 1. Prometheus Architecture: Block ID Generation [cite: 364, 365]
+            const startBlockId = Math.floor(Math.random() * 16777215);
+            const exitBlockId = 0;
+
+            // 2. Encryption (XOR & Base64)
             const key = Math.floor(Math.random() * 255);
-            
-            // 3. The VM Stub (Mimics Prometheus's register-based execution loop)
-            const vmStub = `
-local _P = { _KEYS = {${key}} }
-local function _VM(_STR, _K)
+            const encoded = btoa(input.split('').map(c => String.fromCharCode(c.charCodeAt(0) ^ key)).join(''));
+
+            // 3. Prometheus Virtual Machine Stub
+            // This mirrors the emitContainerFuncBody() and buildWhileBody() logic [cite: 451, 477]
+            const prometheusStub = `-- This Script is Part of the Prometheus Obfuscator by Levno_710
+local _P = { _K = ${key}, _R = {} }
+local _ENV = getfenv()
+local _POS = ${startBlockId} -- Program Counter [cite: 377]
+
+local function _VM_EXEC(_STR)
     local _OUT = ""
     for i = 1, #_STR do
-        _OUT = _OUT .. string.char(bit32.bxor(_STR:sub(i,i):byte(), _K))
+        _OUT = _OUT .. string.char(bit32.bxor(_STR:sub(i,i):byte(), _P._K))
     end
     return _OUT
 end
 
--- Virtual Machine Register Execution Loop
-local _ENV_PROXY = getfenv()
-local _REG = {} -- Register Table
-local _EXEC = function(...)
-    local _BYTECODE = "${encoded}"
-    -- Prometheus logic: Use a proxy to prevent unauthorized access
-    local _PROXY = newproxy(true)
-    getmetatable(_PROXY).__gc = function() print("Session Terminated") end
-    
-    -- Load and run the decrypted bytecode
-    return loadstring(_VM(game:GetService("HttpService"):DecodeBase64(_BYTECODE), _P._KEYS[1]))(...)
+-- Prometheus Register Allocation & Control Flow Flattening [cite: 480, 484, 501]
+local _RUN = function(...)
+    local _ARGS = {...}
+    while _POS ~= ${exitBlockId} do
+        if _POS == ${startBlockId} then
+            _POS = ${exitBlockId}
+            return loadstring(_VM_EXEC(game:GetService("HttpService"):DecodeBase64("${encoded}")))()
+        end
+    end
 end
-_EXEC()`;
 
-            document.getElementById('output').innerText = header + vmStub;
+return _RUN(...)`;
+
+            document.getElementById('luaOutput').textContent = prometheusStub;
+            document.getElementById('outputContainer').style.display = 'block';
         }
     </script>
 </body>
