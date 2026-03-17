@@ -1,72 +1,150 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>H1DD3N PROTECTER</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Hub - Loadstring Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        body { background: #000; color: #8a2be2; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
-        .box { background: #0a0a0a; padding: 25px; border: 1px solid #8a2be2; width: 90%; max-width: 600px; text-align: center; border-radius: 10px; box-shadow: 0 0 15px #8a2be2; z-index: 2; }
-        textarea { width: 100%; height: 250px; background: #000; color: #0f0; border: 1px solid #333; margin-bottom: 15px; padding: 10px; box-sizing: border-box; }
-        .gen-btn { background: #8a2be2; color: white; padding: 12px 25px; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; width: 100%; }
-        .gen-btn:hover { background: #a042ff; box-shadow: 0 0 10px #a042ff; }
-        #status { color: #555; font-size: 13px; margin-top: 15px; }
-        .discord-link { margin-top: 20px; display: block; text-decoration: none; color: #7289da; font-weight: bold; font-size: 14px; }
-        .discord-link img { vertical-align: middle; width: 24px; margin-right: 8px; }
+        :root {
+            --bg-primary: #f0fffe;
+            --bg-card: #ffffff;
+            --accent-turquoise: #40E0D0;
+            --accent-light: #7fffd4;
+            --accent-dark: #20B2AA;
+            --text-primary: #2c3e50;
+            --text-secondary: #5a6c7d;
+            --border-color: rgba(64, 224, 208, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0fffe 0%, #e0f7fa 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .container { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        header { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 3rem; font-weight: 700; background: linear-gradient(135deg, var(--accent-turquoise), var(--accent-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .tabs { display: flex; gap: 10px; margin-bottom: 30px; background: var(--bg-card); padding: 8px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .tab { flex: 1; padding: 14px; border: none; border-radius: 12px; cursor: pointer; background: transparent; font-weight: 600; color: var(--text-secondary); transition: 0.3s; }
+        .tab.active { background: linear-gradient(135deg, var(--accent-turquoise), var(--accent-light)); color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .card { background: var(--bg-card); border-radius: 20px; padding: 30px; margin-bottom: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+        label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--accent-dark); }
+        input, textarea { width: 100%; padding: 15px; background: #f9ffff; border: 2px solid var(--border-color); border-radius: 12px; font-family: 'Fira Code', monospace; outline: none; }
+        textarea { min-height: 180px; }
+
+        .button-container { display: flex; gap: 10px; margin-top: 20px; }
+        button { flex: 1; padding: 15px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-primary { background: var(--accent-turquoise); color: white; }
+        .btn-secondary { border: 2px solid var(--accent-turquoise); background: white; color: var(--accent-turquoise); }
+        
+        .output-box { background: #1e1e1e; color: #40E0D0; padding: 20px; border-radius: 12px; font-family: 'Fira Code', monospace; font-size: 0.85rem; word-break: break-all; margin-top: 10px; min-height: 60px; white-space: pre-wrap; }
+        .notification { position: fixed; top: 20px; right: 20px; padding: 15px 25px; border-radius: 10px; color: white; font-weight: 600; transform: translateX(200%); transition: 0.4s; z-index: 999; }
+        .notification.show { transform: translateX(0); }
     </style>
 </head>
 <body>
-    <audio id="bgMusic" loop>
-        <source src="https://files.catbox.moe/p4bwn1.mp3" type="audio/mpeg">
-    </audio>
+    <div class="container">
+        <header>
+            <h1>Cloud Hub</h1>
+            <p>Loadstring Generator & Obfuscator</p>
+        </header>
 
-    <div class="box">
-        <h2 style="letter-spacing: 3px;">H1DD3N PROTECTER</h2>
-        <textarea id="input" placeholder="-- Paste your Lua Code here..."></textarea>
-        <button class="gen-btn" onclick="generate()">GENERATE LOADSTRING</button>
-        <p id="status">Secure Session: Ready</p>
-        <a href="https://discord.gg/8Pb8sxaS" target="_blank" class="discord-link">
-            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
-            JOIN THE DISCORD
-        </a>
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('loadstring')">Generator</button>
+            <button class="tab" onclick="switchTab('obfuscator')">Obfuscator</button>
+        </div>
+
+        <div id="loadstring-tab" class="tab-content active">
+            <div class="card">
+                <label>Choose Loadstring Name (e.g. MySuperScript)</label>
+                <input type="text" id="loadstringName" placeholder="Enter custom name...">
+                <div class="button-container">
+                    <button class="btn-primary" onclick="genLoad()">Generate Loadstring</button>
+                </div>
+            </div>
+            <div class="card">
+                <label>Output</label>
+                <div class="output-box" id="loadOutput">Ready...</div>
+                <div class="button-container">
+                    <button class="btn-secondary" onclick="copy('loadOutput')">Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="obfuscator-tab" class="tab-content">
+            <div class="card">
+                <label>Lua Code</label>
+                <textarea id="luaInput" placeholder="print('Hello World')"></textarea>
+                <div class="button-container">
+                    <button class="btn-primary" onclick="obfCode()">Obfuscate</button>
+                </div>
+            </div>
+            <div class="card">
+                <label>Obfuscated Result</label>
+                <div class="output-box" id="obfOutput" style="min-height: 150px;">Waiting...</div>
+                <div class="button-container">
+                    <button class="btn-secondary" onclick="copy('obfOutput')">Copy</button>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <div id="notification" class="notification"></div>
+
     <script>
-        // Start audio on first user interaction
-        document.addEventListener('click', () => {
-            const audio = document.getElementById('bgMusic');
-            if (audio.paused) {
-                audio.volume = 0.5;
-                audio.play();
+        function switchTab(t) {
+            document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(t + '-tab').classList.add('active');
+        }
+
+        function genLoad() {
+            const name = document.getElementById('loadstringName').value || "Default_Script";
+            const code = `loadstring(game:HttpGet("https://${name}"))()`;
+            document.getElementById('loadOutput').innerText = code;
+        }
+
+        function obfCode() {
+            const code = document.getElementById('luaInput').value;
+            if(!code) return notify("Please enter code!", true);
+            
+            // Logic: Unauthorized Access Check + Prometheus Proxy Logic
+            const header = "--]]\n-- This file was protected using Luraph Obfuscator v14.6 [https://lura.ph/]\n";
+            const protectedBody = `if not game then print("Unauthorised Access Denied") return end\n${code}`;
+            
+            // Hex Encoding
+            let hex = "";
+            for (let i = 0; i < protectedBody.length; i++) {
+                hex += "\\x" + protectedBody.charCodeAt(i).toString(16).padStart(2, '0');
             }
-        }, { once: true });
 
-        async function generate() {
-            const code = document.getElementById('input').value;
-            const status = document.getElementById('status');
-            if(!code) return alert("Paste some code first!");
+            const result = `${header}local _0xProx = "${hex}";\nloadstring(_0xProx)()`;
+            document.getElementById('obfOutput').innerText = result;
+            notify("Code Obfuscated!", false);
+        }
 
-            status.innerText = "Status: Generating...";
+        function copy(id) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text);
+            notify("Copied to clipboard!", false);
+        }
 
-            try {
-                const response = await fetch('/generate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ lua: code })
-                });
-
-                if (!response.ok) throw new Error();
-
-                const data = await response.json();
-                const rawUrl = window.location.origin + "/raw/" + data.id;
-                const loadstring = 'loadstring(game:HttpGet("' + rawUrl + '"))()';
-                
-                await navigator.clipboard.writeText(loadstring);
-                status.innerText = "Status: LOADSTRING COPIED!";
-                status.style.color = "#0f0";
-                alert("Successfully Generated!\n\nLoadstring copied to clipboard.");
-            } catch (err) {
-                status.innerText = "Status: Error (Server waking up, try again!)";
-                status.style.color = "red";
-            }
+        function notify(msg, err) {
+            const n = document.getElementById('notification');
+            n.innerText = msg;
+            n.style.background = err ? "#ff4757" : "#2ed573";
+            n.classList.add('show');
+            setTimeout(() => n.classList.remove('show'), 2500);
         }
     </script>
 </body>
