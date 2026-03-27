@@ -3,114 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ScriptsMaker AI | Source Engine</title>
+    <title>ScriptsMaker AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #0b0e14; color: #cfd8dc; font-family: 'Segoe UI', sans-serif; }
-        .glass { background: #161b22; border: 1px solid #30363d; border-radius: 12px; }
-        .code-view { font-family: 'Consolas', monospace; color: #79c0ff; background: #010409; }
-        .btn-primary { background: #238636; transition: 0.2s; }
-        .btn-primary:hover { background: #2ea043; }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+        body { background-color: #131314; color: #e3e3e3; font-family: 'Outfit', sans-serif; margin: 0; overflow: hidden; }
+        .sidebar { background-color: #1e1f20; width: 260px; transition: all 0.3s ease; }
+        .chat-container { background-color: #131314; flex-grow: 1; display: flex; flex-col; height: 100vh; }
+        .input-area { max-width: 800px; background-color: #1e1f20; border-radius: 28px; padding: 12px 24px; margin-bottom: 20px; }
+        .recent-item:hover { background-color: #333537; cursor: pointer; border-radius: 20px; }
+        .lua-block { background-color: #000; color: #a5d6ff; border-radius: 12px; padding: 15px; font-family: 'Consolas', monospace; font-size: 13px; margin: 10px 0; border: 1px solid #30363d; overflow-x: auto; }
+        .user-msg { color: #e3e3e3; font-weight: 500; margin-bottom: 20px; }
+        .ai-msg { margin-bottom: 40px; }
+        .gemini-gradient { background: linear-gradient(74deg, #4285f4 0, #9b72cb 9%, #d96570 20%, #d96570 24%, #9b72cb 35%, #4285f4 44%, #9b72cb 50%, #d96570 56%, #131314 75%, #131314 100%); background-clip: text; -webkit-background-clip: text; color: transparent; font-weight: 600; font-size: 22px; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background: #333537; border-radius: 10px; }
     </style>
 </head>
-<body class="p-4 md:p-10">
+<body class="flex">
 
-    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <aside class="sidebar h-screen p-4 flex flex-col hidden md:flex">
+        <button class="flex items-center gap-3 p-3 text-gray-400 hover:bg-[#333537] rounded-full w-fit mb-8">
+            <i class="fa-solid fa-bars"></i>
+        </button>
         
-        <div class="glass p-6 space-y-4">
-            <h1 class="text-2xl font-bold text-white">ScriptsMaker AI</h1>
-            <p class="text-sm text-gray-400">Ask for any logic found in your uploaded files (Jump, Speed, TP, Auto-Duel, etc.)</p>
-            
-            <div id="chat-history" class="h-48 overflow-y-auto border-b border-gray-700 mb-4 p-2 text-sm space-y-2">
-                <div class="text-green-400">AI: System Loaded. Mapping logic from 10 files...</div>
-            </div>
+        <button class="flex items-center gap-3 p-3 bg-[#1a1b1c] text-gray-500 rounded-full mb-8 text-sm w-fit pr-6">
+            <i class="fa-solid fa-plus"></i> New Chat
+        </button>
 
-            <textarea id="ai-prompt" class="w-full bg-black border border-gray-600 rounded p-3 h-32 focus:border-blue-500 outline-none" 
-                placeholder="e.g. 'Make a speed button and a jump boost button and also auto grab'"></textarea>
-            
-            <div class="flex gap-2">
-                <button onclick="generateAI()" class="btn-primary text-white px-6 py-2 rounded font-bold flex-1">GENERATE SCRIPT</button>
-                <button onclick="document.getElementById('ai-prompt').value=''" class="bg-gray-700 px-4 rounded">Clear</button>
+        <div class="flex-grow">
+            <p class="text-xs font-medium text-gray-400 px-3 mb-4 uppercase tracking-wider">Recent</p>
+            <div id="recent-list" class="space-y-1">
+                <div class="recent-item p-3 text-sm truncate flex items-center gap-3">
+                    <i class="fa-regular fa-message text-xs"></i> Insane Duels Hub...
+                </div>
             </div>
         </div>
+    </aside>
 
-        <div class="glass p-6 flex flex-col">
-            <div class="flex justify-between items-center mb-2">
-                <span class="text-xs font-mono uppercase text-gray-500">Output: script.lua</span>
-                <button onclick="copyCode()" class="text-blue-400 text-xs hover:underline">Copy Code</button>
+    <main class="chat-container relative">
+        <div id="chat-content" class="flex-grow overflow-y-auto px-6 py-10 flex flex-col items-center">
+            
+            <div id="welcome-screen" class="w-full max-w-3xl mt-20">
+                <h1 class="gemini-gradient mb-8">Hello, ScriptsMaker</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-[#1e1f20] p-4 rounded-2xl text-sm text-gray-300 hover:bg-[#282a2c] cursor-pointer" onclick="quickPrompt('Make a draggable red GUI')">
+                        Generate "Insane Duels" GUI with red outline...
+                    </div>
+                    <div class="bg-[#1e1f20] p-4 rounded-2xl text-sm text-gray-300 hover:bg-[#282a2c] cursor-pointer" onclick="quickPrompt('Add float and speed logic')">
+                        Inject physics logic from floatsrcBYME.txt...
+                    </div>
+                </div>
             </div>
-            <pre id="lua-output" class="code-view p-4 rounded h-full overflow-auto text-xs border border-gray-800">-- Script logic will appear here...</pre>
+
+            <div id="messages-wrapper" class="w-full max-w-3xl space-y-6 hidden"></div>
         </div>
-    </div>
+
+        <div class="w-full flex justify-center p-4">
+            <div class="input-area w-full max-w-3xl flex flex-col">
+                <textarea id="user-input" rows="1" class="bg-transparent border-none outline-none text-gray-200 resize-none py-2 px-1 text-base placeholder-gray-500" placeholder="Type here..." oninput="this.style.height = '';this.style.height = this.scrollHeight + 'px'"></textarea>
+                <div class="flex justify-between items-center mt-3">
+                    <div class="flex gap-4 text-gray-400">
+                        <label class="cursor-pointer hover:text-white transition"><i class="fa-regular fa-image"></i><input type="file" class="hidden"></label>
+                        <i class="fa-solid fa-microphone hover:text-white transition cursor-pointer"></i>
+                    </div>
+                    <button id="send-btn" onclick="handleSend()" class="text-blue-400 hover:text-blue-300 transition">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
 
     <script>
-        // CORE LOGIC ENGINE (Extracted from your specific .txt files)
-        const FILE_LOGIC = {
-            speed: {
-                match: ["speed", "velocity", "fast", "walkspeed"],
-                code: "-- Logic: Ambitous duels clone\nlocal BoostSpeed = 30\ngame.Players.LocalPlayer.Character.Humanoid.WalkSpeed = BoostSpeed"
-            },
-            jump: {
-                match: ["jump", "hop", "high jump", "jumpboost"],
-                code: "-- Logic: Ambitous duels clone\nlocal HOP_POWER = 35\nlocal hum = game.Players.LocalPlayer.Character.Humanoid\nhum.JumpPower = HOP_POWER\nhum.UseJumpPower = true"
-            },
-            teleport: {
-                match: ["tp", "teleport", "move to"],
-                code: "-- Logic: Tp rag / Tp best 2\nlocal function move(pos)\n    local char = game.Players.LocalPlayer.Character\n    if char then\n        char:PivotTo(CFrame.new(pos))\n        char.HumanoidRootPart.AssemblyLinearVelocity = Vector3.new(0,0,0)\n    end\nend"
-            },
-            autograb: {
-                match: ["grab", "steal", "auto grab", "collect"],
-                code: "-- Logic: Semitp (3).txt\nfor _, v in pairs(workspace:GetDescendants()) do\n    if v:IsA('ProximityPrompt') then\n        fireproximityprompt(v)\n    end\nend"
-            },
-            esp: {
-                match: ["esp", "xray", "see through", "timer"],
-                code: "-- Logic: Esp Timer.txt\nlocal billboard = Instance.new('BillboardGui')\nbillboard.AlwaysOnTop = true\nbillboard.Size = UDim2.new(0, 50, 0, 25)\nbillboard.Parent = game.CoreGui"
-            },
-            antiragdoll: {
-                match: ["ragdoll", "unwalk", "anti ragdoll"],
-                code: "-- Logic: Semitp (3).txt\ngame.Players.LocalPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)"
-            },
-            autoduel: {
-                match: ["duel", "auto duel", "silent duel"],
-                code: "-- Logic: AutoDuelSilent Test By Prince\nlocal waypoints = {Vector3.new(-475,-7,96), Vector3.new(-483,-5,95)}\n-- Moving to waypoints..."
-            },
-            float: {
-                match: ["float", "fly", "dodge", "hover"],
-                code: "-- Logic: floatsrcBYME.txt\nlocal bPos = Instance.new('BodyPosition')\nbPos.MaxForce = Vector3.new(0, math.huge, 0)\nbPos.P = 10000\nbPos.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart"
-            }
+        // Mapping Logic directly from your 10 uploaded files
+        const LOGIC_DB = {
+            gui: `-- Draggable UI Logic (Source: Kawatan)\nlocal Main = Instance.new("Frame")\nMain.Draggable = true\nMain.Active = true\nInstance.new("UICorner", Main).CornerRadius = UDim.new(0,8)\nlocal Stroke = Instance.new("UIStroke", Main)\nStroke.Color = Color3.fromRGB(255,0,0)`,
+            speed: `-- Speed Boost (Source: Ambitious Hub)\ngame.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 30`,
+            float: `-- Float/Dodge (Source: floatsrcBYME.txt)\nlocal bp = Instance.new("BodyPosition", hrp)\nbp.MaxForce = Vector3.new(0, math.huge, 0)\nbp.P = 10000\nbp.D = 600`,
+            esp: `-- ESP Logic (Source: Esp Timer.txt)\nlocal bb = Instance.new("BillboardGui")\nbb.AlwaysOnTop = true\nbb.Size = UDim2.new(0,50,0,25)`,
+            grab: `-- Auto Grab (Source: Semitp (3).txt)\nfor _,v in pairs(workspace:GetDescendants()) do\n  if v:IsA("ProximityPrompt") then fireproximityprompt(v) end\nend`
         };
 
-        function generateAI() {
-            const prompt = document.getElementById('ai-prompt').value.toLowerCase();
-            const output = document.getElementById('lua-output');
-            const chat = document.getElementById('chat-history');
+        function handleSend() {
+            const input = document.getElementById('user-input');
+            const welcome = document.getElementById('welcome-screen');
+            const wrapper = document.getElementById('messages-wrapper');
+            const prompt = input.value.trim();
+
+            if (!prompt) return;
+
+            welcome.style.display = 'none';
+            wrapper.classList.remove('hidden');
+
+            // Add User Bubble
+            wrapper.innerHTML += `<div class="user-msg">${prompt}</div>`;
             
-            let finalScript = "-- [[ SCRIPTSMAKER GENERATED SCRIPT ]]\n-- Compiled from your reference files\n\n";
-            let found = false;
+            // Generate AI Response based on keywords
+            let codeOutput = "-- ScriptsMaker AI Output\n\n";
+            if (prompt.toLowerCase().includes("gui")) codeOutput += LOGIC_DB.gui + "\n";
+            if (prompt.toLowerCase().includes("speed")) codeOutput += LOGIC_DB.speed + "\n";
+            if (prompt.toLowerCase().includes("float")) codeOutput += LOGIC_DB.float + "\n";
+            if (prompt.toLowerCase().includes("esp")) codeOutput += LOGIC_DB.esp + "\n";
+            if (prompt.toLowerCase().includes("grab") || prompt.toLowerCase().includes("steal")) codeOutput += LOGIC_DB.grab + "\n";
 
-            // Search the logic database for matches in the user prompt
-            for (const category in FILE_LOGIC) {
-                const item = FILE_LOGIC[category];
-                if (item.match.some(keyword => prompt.includes(keyword))) {
-                    finalScript += item.code + "\n\n";
-                    found = true;
-                }
-            }
+            wrapper.innerHTML += `
+                <div class="ai-msg">
+                    <p class="text-sm text-gray-300 mb-2"><i class="fa-solid fa-wand-magic-sparkles text-blue-400"></i> Logic Compiled:</p>
+                    <div class="lua-block"><pre>${codeOutput}</pre></div>
+                    <button class="text-xs text-gray-500 mt-2 hover:text-white" onclick="navigator.clipboard.writeText(\`${codeOutput}\`)">Copy to Clipboard</button>
+                </div>`;
 
-            if (!found) {
-                finalScript += "-- No specific logic found. Try words like 'Speed', 'Jump', 'TP', or 'Grab'.";
-            }
-
-            output.innerText = finalScript;
-            chat.innerHTML += `<div><span class="text-blue-400">User:</span> ${prompt}</div>`;
-            chat.innerHTML += `<div class="text-green-400">AI: Logic found and injected.</div>`;
-            chat.scrollTop = chat.scrollHeight;
+            input.value = '';
+            input.style.height = 'auto';
+            document.getElementById('chat-content').scrollTop = document.getElementById('chat-content').scrollHeight;
         }
 
-        function copyCode() {
-            const code = document.getElementById('lua-output').innerText;
-            navigator.clipboard.writeText(code);
-            alert("Script Copied!");
+        function quickPrompt(txt) {
+            document.getElementById('user-input').value = txt;
+            handleSend();
         }
     </script>
 </body>
