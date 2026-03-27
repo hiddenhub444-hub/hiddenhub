@@ -8,161 +8,190 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&display=swap');
+        
         body { background-color: #131314; color: #e3e3e3; font-family: 'Google Sans', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
         /* Sidebar */
-        .sidebar { width: 280px; background-color: #1e1f20; display: flex; flex-direction: column; padding: 12px; }
-        .new-chat-btn { background-color: #1a1b1c; color: #8e918f; border-radius: 50px; padding: 10px 20px; font-size: 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 30px; border: none; cursor: pointer; transition: 0.2s; width: fit-content; }
-        .new-chat-btn:hover { background-color: #333537; color: #e3e3e3; }
-        .history-item { padding: 10px 16px; border-radius: 50px; font-size: 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; color: #c4c7c5; transition: 0.2s; }
-        .history-item:hover { background-color: #333537; }
-        .history-item.active { background-color: #004a77; color: #c2e7ff; }
+        .sidebar { width: 280px; background-color: #1e1f20; display: flex; flex-direction: column; padding: 12px; border-right: 1px solid #333537; }
+        .new-chat-btn { background-color: #1a1b1c; color: #8e918f; border-radius: 50px; padding: 12px 20px; font-size: 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 30px; cursor: pointer; border: none; transition: 0.2s; width: fit-content; }
+        .new-chat-btn:hover { background-color: #333537; color: #fff; }
+        .history-item { padding: 10px 16px; border-radius: 50px; font-size: 14px; cursor: pointer; color: #c4c7c5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: 0.2s; }
+        .history-item:hover, .history-item.active { background-color: #333537; color: #fff; }
 
-        /* Main */
-        .main-content { flex: 1; display: flex; flex-direction: column; }
-        .chat-view { flex: 1; overflow-y: auto; padding-top: 40px; scroll-behavior: smooth; }
-        .container { width: 100%; max-width: 800px; margin: 0 auto; padding: 0 20px; }
+        /* Main Content */
+        .main-content { flex: 1; display: flex; flex-direction: column; position: relative; }
+        .chat-scroll { flex: 1; overflow-y: auto; scroll-behavior: smooth; }
+        .container { width: 100%; max-width: 800px; margin: 0 auto; padding: 40px 20px; }
 
-        /* Text Styles */
-        .welcome-title { font-size: 56px; font-weight: 500; background: linear-gradient(74deg, #4285f4, #9b72cb, #d96570); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .user-msg { margin-bottom: 32px; display: flex; justify-content: flex-end; }
-        .user-text { background-color: #28292a; padding: 12px 20px; border-radius: 22px; max-width: 85%; }
-        .ai-msg { margin-bottom: 40px; display: flex; gap: 20px; }
+        /* Message Styling - FIXED WRAPPING */
+        .msg-row { margin-bottom: 35px; display: flex; gap: 20px; width: 100%; }
+        .user-row { justify-content: flex-end; }
+        .msg-content { 
+            font-size: 16px; 
+            line-height: 1.6; 
+            word-wrap: break-word; /* Fix for big sentences */
+            overflow-wrap: break-word; 
+            max-width: 100%; 
+        }
+        .user-bubble { background-color: #28292a; padding: 12px 20px; border-radius: 24px; max-width: 85%; }
         .ai-icon { width: 32px; height: 32px; background: linear-gradient(to bottom right, #4285f4, #d96570); border-radius: 50%; flex-shrink: 0; }
-        
-        /* Input */
-        .bottom-area { padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .input-bar { width: 100%; max-width: 800px; background-color: #1e1f20; border-radius: 32px; padding: 10px 24px; display: flex; align-items: center; gap: 15px; }
-        textarea { flex: 1; background: transparent; border: none; outline: none; color: #e3e3e3; font-size: 16px; resize: none; max-height: 200px; line-height: 1.5; }
+
+        /* Gemini Welcome Gradient */
+        .welcome-text { font-size: 56px; font-weight: 500; background: linear-gradient(74deg, #4285f4, #9b72cb, #d96570); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* Input Area */
+        .input-area { padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .input-box { width: 100%; max-width: 800px; background-color: #1e1f20; border-radius: 32px; padding: 12px 24px; display: flex; align-items: center; gap: 15px; border: 2px solid transparent; transition: 0.2s; }
+        .input-box.drag-over { border-color: #4285f4; background-color: #282a2c; }
+        textarea { flex: 1; background: transparent; border: none; outline: none; color: #e3e3e3; font-size: 16px; resize: none; max-height: 200px; }
 
         .hidden { display: none !important; }
     </style>
 </head>
-<body>
+<body ondragover="event.preventDefault()" ondrop="handleFileDrop(event)">
 
     <aside class="sidebar">
         <button class="new-chat-btn" onclick="startNewChat()">
             <i class="fa-solid fa-plus"></i> <span>New chat</span>
         </button>
         <div class="text-xs font-medium text-gray-500 px-4 mb-4">Recent</div>
-        <div id="sidebar-history" class="overflow-y-auto flex-grow space-y-1"></div>
+        <div id="sidebar-list" class="space-y-1 overflow-y-auto flex-grow"></div>
     </aside>
 
     <main class="main-content">
-        <div class="chat-view" id="chat-view">
-            <div id="welcome-ui" class="container mt-20">
-                <h1 class="welcome-title">Hello, User</h1>
+        <div class="chat-scroll" id="scroll-box">
+            <div id="welcome-ui" class="container text-center mt-20">
+                <h1 class="welcome-text">Hello, User</h1>
                 <p class="text-2xl text-gray-500 mt-2">How can I help you today?</p>
             </div>
             <div id="chat-log" class="container hidden"></div>
         </div>
 
-        <div class="bottom-area">
-            <div class="input-bar">
-                <textarea id="user-input" rows="1" placeholder="Enter a prompt here" onkeydown="handleKeyPress(event)"></textarea>
-                <i class="fa-solid fa-paper-plane text-blue-500 cursor-pointer text-xl" onclick="processMessage()"></i>
+        <div class="input-area">
+            <div class="input-box" id="drop-zone">
+                <textarea id="main-input" rows="1" placeholder="Enter a prompt here" onkeydown="handleKeyDown(event)"></textarea>
+                <div class="flex gap-4 items-center">
+                    <label class="cursor-pointer text-gray-400 hover:text-white"><i class="fa-regular fa-image text-xl"></i><input type="file" class="hidden" onchange="handleFileSelect(event)"></label>
+                    <i class="fa-solid fa-paper-plane text-blue-500 cursor-pointer text-xl" onclick="sendMessage()"></i>
+                </div>
             </div>
-            <p class="text-[11px] text-gray-500 mt-3">Gemini may display inaccurate info, so double-check its responses.</p>
+            <p class="text-[11px] text-gray-500 mt-3 text-center">Gemini may display inaccurate info, including about people, so double-check its responses.</p>
         </div>
     </main>
 
     <script>
         const chatLog = document.getElementById('chat-log');
         const welcomeUI = document.getElementById('welcome-ui');
-        const userInput = document.getElementById('user-input');
-        const historyList = document.getElementById('sidebar-history');
+        const mainInput = document.getElementById('main-input');
+        const sidebarList = document.getElementById('sidebar-list');
+        const dropZone = document.getElementById('drop-zone');
 
         let currentChatId = null;
-        let chatSessions = {}; // Stores { id: { title: "", msgs: [] } }
+        let sessions = {};
 
-        // Banned Keywords for Safety Guard
-        const BANNED = ["exploit", "hack", "leak", "inappropriate", "badword1", "badword2"];
+        // Safety Guard Keywords
+        const SAFETY_KEYWORDS = ["exploit", "hack", "leak", "illegal", "badword1"];
 
-        function handleKeyPress(e) {
+        function handleKeyDown(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                processMessage();
+                sendMessage();
             }
         }
 
-        function processMessage() {
-            const text = userInput.value.trim();
+        function sendMessage() {
+            const text = mainInput.value.trim();
             if (!text) return;
 
-            // Safety Guard Check
-            const isUnsafe = BANNED.some(word => text.toLowerCase().includes(word));
-
+            // Initialize chat session on first message
             if (!currentChatId) {
                 currentChatId = Date.now();
-                chatSessions[currentChatId] = { title: text, msgs: [] };
-                addHistoryItem(currentChatId, text);
+                sessions[currentChatId] = { title: text, msgs: [] };
+                updateSidebar(currentChatId, text);
                 welcomeUI.classList.add('hidden');
                 chatLog.classList.remove('hidden');
-                chatLog.innerHTML = '';
             }
 
-            // User Message
-            addMessageUI('user', text);
-            chatSessions[currentChatId].msgs.push({ role: 'user', content: text });
+            // Safety Guard check
+            const isUnsafe = SAFETY_KEYWORDS.some(word => text.toLowerCase().includes(word));
 
-            // AI Response
+            // Push User Message
+            addMessage('user', text);
+            sessions[currentChatId].msgs.push({ role: 'user', content: text });
+
+            // AI Logic
             setTimeout(() => {
-                let responseText;
+                let response;
                 if (isUnsafe) {
-                    responseText = "I cannot help with that. I am designed to be a helpful and safe AI assistant, and I must follow safety guidelines regarding that type of request.";
+                    response = "I cannot help with that. I am designed to be a helpful and safe AI assistant, and my safety guidelines prevent me from assisting with requests of this nature.";
                 } else {
-                    responseText = getAIResponse(text);
+                    response = generateAIResponse(text);
                 }
-                
-                addMessageUI('ai', responseText);
-                chatSessions[currentChatId].msgs.push({ role: 'ai', content: responseText });
-            }, 800);
+                addMessage('ai', response);
+                sessions[currentChatId].msgs.push({ role: 'ai', content: response });
+            }, 700);
 
-            userInput.value = '';
-            userInput.style.height = 'auto';
+            mainInput.value = '';
+            mainInput.style.height = 'auto';
         }
 
-        function addMessageUI(role, content) {
-            const div = document.createElement('div');
-            div.className = role === 'user' ? 'user-msg' : 'ai-msg';
+        function addMessage(role, content) {
+            const row = document.createElement('div');
+            row.className = `msg-row ${role === 'user' ? 'user-row' : ''}`;
             
             if (role === 'user') {
-                div.innerHTML = `<div class="user-text">${content}</div>`;
+                row.innerHTML = `<div class="msg-content user-bubble">${content}</div>`;
             } else {
-                div.innerHTML = `<div class="ai-icon"></div><div class="ai-text">${content}</div>`;
+                row.innerHTML = `<div class="ai-icon"></div><div class="msg-content">${content}</div>`;
             }
             
-            chatLog.appendChild(div);
-            document.getElementById('chat-view').scrollTop = document.getElementById('chat-view').scrollHeight;
+            chatLog.appendChild(row);
+            document.getElementById('scroll-box').scrollTop = document.getElementById('scroll-box').scrollHeight;
         }
 
-        function getAIResponse(input) {
-            // General Conversational Logic
-            const p = input.toLowerCase();
+        function generateAIResponse(text) {
+            const p = text.toLowerCase();
             if (p.includes("hello") || p.includes("hi")) return "Hello! How can I assist you today?";
-            if (p.includes("who are you")) return "I am a Gemini-inspired AI assistant created to help you with information, writing, and general questions.";
-            if (p.includes("weather")) return "I don't have real-time GPS access, but you can check your local weather app for the most accurate forecast!";
-            return "That's an interesting question. I'm processing your request—could you provide more details so I can give you a better answer?";
+            if (p.includes("who are you")) return "I am a Gemini-style AI assistant. I'm here to help you brainstorm, write, and answer your questions.";
+            return "I'm processing that information for you. Could you clarify what specific details you're looking for?";
         }
 
-        function addHistoryItem(id, title) {
+        // File Drag & Drop Logic
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+        dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('drag-over'); });
+
+        function handleFileDrop(e) {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) processFile(files[0]);
+        }
+
+        function handleFileSelect(e) {
+            if (e.target.files.length > 0) processFile(e.target.files[0]);
+        }
+
+        function processFile(file) {
+            mainInput.value = `[Uploaded File: ${file.name}] `;
+            mainInput.focus();
+        }
+
+        function updateSidebar(id, title) {
             const item = document.createElement('div');
-            item.className = 'history-item';
+            item.className = 'history-item active';
             item.id = `chat-${id}`;
-            item.innerHTML = `<i class="fa-regular fa-message"></i> <span class="truncate">${title}</span>`;
-            item.onclick = () => switchChat(id);
-            historyList.prepend(item);
+            item.innerHTML = `<i class="fa-regular fa-message text-xs"></i> ${title}`;
+            item.onclick = () => loadSession(id);
+            sidebarList.prepend(item);
         }
 
-        function switchChat(id) {
+        function loadSession(id) {
             currentChatId = id;
             welcomeUI.classList.add('hidden');
             chatLog.classList.remove('hidden');
             chatLog.innerHTML = '';
-            
-            chatSessions[id].msgs.forEach(m => addMessageUI(m.role, m.content));
-            
-            document.querySelectorAll('.history-item').forEach(e => e.classList.remove('active'));
+            sessions[id].msgs.forEach(m => addMessage(m.role, m.content));
+            document.querySelectorAll('.history-item').forEach(el => el.classList.remove('active'));
             document.getElementById(`chat-${id}`).classList.add('active');
         }
 
@@ -170,8 +199,8 @@
             currentChatId = null;
             welcomeUI.classList.remove('hidden');
             chatLog.classList.add('hidden');
-            userInput.value = '';
-            document.querySelectorAll('.history-item').forEach(e => e.classList.remove('active'));
+            mainInput.value = '';
+            document.querySelectorAll('.history-item').forEach(el => el.classList.remove('active'));
         }
     </script>
 </body>
