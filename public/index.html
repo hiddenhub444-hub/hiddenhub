@@ -3,108 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ScriptsMaker AI | Lua Generator</title>
+    <title>ScriptsMaker AI | Source Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #0f172a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-        .lua-output { font-family: 'Fira Code', monospace; background: #000; color: #3b82f6; }
+        body { background-color: #0b0e14; color: #cfd8dc; font-family: 'Segoe UI', sans-serif; }
+        .glass { background: #161b22; border: 1px solid #30363d; border-radius: 12px; }
+        .code-view { font-family: 'Consolas', monospace; color: #79c0ff; background: #010409; }
+        .btn-primary { background: #238636; transition: 0.2s; }
+        .btn-primary:hover { background: #2ea043; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center p-4 md:p-8">
+<body class="p-4 md:p-10">
 
-    <header class="w-full max-w-5xl flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-            ScriptsMaker <span class="text-sm font-light text-slate-500 italic">v1.0</span>
-        </h1>
-        <div class="flex gap-4">
-            <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-github"></i> Source</a>
-        </div>
-    </header>
-
-    <main class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
         
-        <section class="flex flex-col gap-4">
-            <div class="glass p-6 rounded-2xl flex flex-col gap-4">
-                <h2 class="text-lg font-semibold border-b border-slate-700 pb-2">AI Input Console</h2>
-                
-                <div id="chat-box" class="h-64 overflow-y-auto space-y-4 p-2 text-sm">
-                    <div class="text-cyan-400"><b>System:</b> Ready to clone UI. Paste an image or tell me what features you want (Speed, Auto Grab, ESP, etc.)</div>
-                </div>
-
-                <div class="relative">
-                    <textarea id="user-input" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500 h-24" placeholder="e.g., 'Make the speed button work with velocity boost 50'"></textarea>
-                    <div class="flex mt-2 gap-2">
-                        <button onclick="processRequest()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white py-2 rounded-lg font-medium transition">Generate Script</button>
-                        <label class="bg-slate-700 hover:bg-slate-600 p-2 rounded-lg cursor-pointer">
-                            <i class="fas fa-image"></i>
-                            <input type="file" id="image-input" class="hidden" accept="image/*">
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="glass p-6 rounded-2xl flex flex-col gap-4">
-            <div class="flex justify-between items-center border-b border-slate-700 pb-2">
-                <h2 class="text-lg font-semibold">Generated Lua Logic</h2>
-                <button onclick="copyToClipboard()" class="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1 rounded border border-slate-600 transition">Copy Code</button>
-            </div>
+        <div class="glass p-6 space-y-4">
+            <h1 class="text-2xl font-bold text-white">ScriptsMaker AI</h1>
+            <p class="text-sm text-gray-400">Ask for any logic found in your uploaded files (Jump, Speed, TP, Auto-Duel, etc.)</p>
             
-            <pre id="output-code" class="lua-output p-4 rounded-xl h-[400px] overflow-auto text-xs leading-relaxed">
--- Waiting for prompt...
--- Logic mapped from: 
--- [Ambitous duels, Tp rag, Esp Timer, etc.]
-            </pre>
-        </section>
+            <div id="chat-history" class="h-48 overflow-y-auto border-b border-gray-700 mb-4 p-2 text-sm space-y-2">
+                <div class="text-green-400">AI: System Loaded. Mapping logic from 10 files...</div>
+            </div>
 
-    </main>
+            <textarea id="ai-prompt" class="w-full bg-black border border-gray-600 rounded p-3 h-32 focus:border-blue-500 outline-none" 
+                placeholder="e.g. 'Make a speed button and a jump boost button and also auto grab'"></textarea>
+            
+            <div class="flex gap-2">
+                <button onclick="generateAI()" class="btn-primary text-white px-6 py-2 rounded font-bold flex-1">GENERATE SCRIPT</button>
+                <button onclick="document.getElementById('ai-prompt').value=''" class="bg-gray-700 px-4 rounded">Clear</button>
+            </div>
+        </div>
+
+        <div class="glass p-6 flex flex-col">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-mono uppercase text-gray-500">Output: script.lua</span>
+                <button onclick="copyCode()" class="text-blue-400 text-xs hover:underline">Copy Code</button>
+            </div>
+            <pre id="lua-output" class="code-view p-4 rounded h-full overflow-auto text-xs border border-gray-800">-- Script logic will appear here...</pre>
+        </div>
+    </div>
 
     <script>
-        // Mapping keywords to logic from your provided files
-        const LOGIC_DATABASE = {
-            speed: `local function setSpeed(val) \n    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = val or 30 \nend`,
-            grab: `-- Logic from Semitp (3).txt\nlocal function autoGrab() \n    for _,v in pairs(workspace:GetDescendants()) do \n        if v:IsA("ProximityPrompt") then fireproximityprompt(v) end \n    end \nend`,
-            esp: `-- Logic from Esp Timer.txt\nlocal function createESP(part, label) \n    local bb = Instance.new("BillboardGui", part)\n    bb.AlwaysOnTop = true\n    bb.Size = UDim2.new(0,50,0,25)\nend`,
-            ragdoll: `-- Logic from Ambitous duels clone.txt\nlocal function antiRagdoll() \n    game.Players.LocalPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false) \nend`
+        // CORE LOGIC ENGINE (Extracted from your specific .txt files)
+        const FILE_LOGIC = {
+            speed: {
+                match: ["speed", "velocity", "fast", "walkspeed"],
+                code: "-- Logic: Ambitous duels clone\nlocal BoostSpeed = 30\ngame.Players.LocalPlayer.Character.Humanoid.WalkSpeed = BoostSpeed"
+            },
+            jump: {
+                match: ["jump", "hop", "high jump", "jumpboost"],
+                code: "-- Logic: Ambitous duels clone\nlocal HOP_POWER = 35\nlocal hum = game.Players.LocalPlayer.Character.Humanoid\nhum.JumpPower = HOP_POWER\nhum.UseJumpPower = true"
+            },
+            teleport: {
+                match: ["tp", "teleport", "move to"],
+                code: "-- Logic: Tp rag / Tp best 2\nlocal function move(pos)\n    local char = game.Players.LocalPlayer.Character\n    if char then\n        char:PivotTo(CFrame.new(pos))\n        char.HumanoidRootPart.AssemblyLinearVelocity = Vector3.new(0,0,0)\n    end\nend"
+            },
+            autograb: {
+                match: ["grab", "steal", "auto grab", "collect"],
+                code: "-- Logic: Semitp (3).txt\nfor _, v in pairs(workspace:GetDescendants()) do\n    if v:IsA('ProximityPrompt') then\n        fireproximityprompt(v)\n    end\nend"
+            },
+            esp: {
+                match: ["esp", "xray", "see through", "timer"],
+                code: "-- Logic: Esp Timer.txt\nlocal billboard = Instance.new('BillboardGui')\nbillboard.AlwaysOnTop = true\nbillboard.Size = UDim2.new(0, 50, 0, 25)\nbillboard.Parent = game.CoreGui"
+            },
+            antiragdoll: {
+                match: ["ragdoll", "unwalk", "anti ragdoll"],
+                code: "-- Logic: Semitp (3).txt\ngame.Players.LocalPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)"
+            },
+            autoduel: {
+                match: ["duel", "auto duel", "silent duel"],
+                code: "-- Logic: AutoDuelSilent Test By Prince\nlocal waypoints = {Vector3.new(-475,-7,96), Vector3.new(-483,-5,95)}\n-- Moving to waypoints..."
+            },
+            float: {
+                match: ["float", "fly", "dodge", "hover"],
+                code: "-- Logic: floatsrcBYME.txt\nlocal bPos = Instance.new('BodyPosition')\nbPos.MaxForce = Vector3.new(0, math.huge, 0)\nbPos.P = 10000\nbPos.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart"
+            }
         };
 
-        function processRequest() {
-            const input = document.getElementById('user-input').value.toLowerCase();
-            const output = document.getElementById('output-code');
-            const chat = document.getElementById('chat-box');
+        function generateAI() {
+            const prompt = document.getElementById('ai-prompt').value.toLowerCase();
+            const output = document.getElementById('lua-output');
+            const chat = document.getElementById('chat-history');
+            
+            let finalScript = "-- [[ SCRIPTSMAKER GENERATED SCRIPT ]]\n-- Compiled from your reference files\n\n";
+            let found = false;
 
-            let generatedScript = "-- Generated by ScriptsMaker AI\n\n";
-
-            // Keyword detection logic
-            if (input.includes("speed") || input.includes("velocity")) {
-                generatedScript += LOGIC_DATABASE.speed + "\n\n";
-            }
-            if (input.includes("grab") || input.includes("steal")) {
-                generatedScript += LOGIC_DATABASE.grab + "\n\n";
-            }
-            if (input.includes("esp") || input.includes("xray")) {
-                generatedScript += LOGIC_DATABASE.esp + "\n\n";
-            }
-            if (input.includes("ragdoll") || input.includes("unwalk")) {
-                generatedScript += LOGIC_DATABASE.ragdoll + "\n\n";
+            // Search the logic database for matches in the user prompt
+            for (const category in FILE_LOGIC) {
+                const item = FILE_LOGIC[category];
+                if (item.match.some(keyword => prompt.includes(keyword))) {
+                    finalScript += item.code + "\n\n";
+                    found = true;
+                }
             }
 
-            if (generatedScript === "-- Generated by ScriptsMaker AI\n\n") {
-                generatedScript += "-- No specific keywords detected. Please mention 'Speed', 'Grab', or 'ESP'.";
+            if (!found) {
+                finalScript += "-- No specific logic found. Try words like 'Speed', 'Jump', 'TP', or 'Grab'.";
             }
 
-            output.innerText = generatedScript;
-            chat.innerHTML += `<div class="text-slate-300"><b>User:</b> ${input}</div>`;
-            chat.innerHTML += `<div class="text-blue-400"><b>ScriptsMaker:</b> Script generated based on your files!</div>`;
+            output.innerText = finalScript;
+            chat.innerHTML += `<div><span class="text-blue-400">User:</span> ${prompt}</div>`;
+            chat.innerHTML += `<div class="text-green-400">AI: Logic found and injected.</div>`;
             chat.scrollTop = chat.scrollHeight;
         }
 
-        function copyToClipboard() {
-            const text = document.getElementById('output-code').innerText;
-            navigator.clipboard.writeText(text);
-            alert("Script copied to clipboard!");
+        function copyCode() {
+            const code = document.getElementById('lua-output').innerText;
+            navigator.clipboard.writeText(code);
+            alert("Script Copied!");
         }
     </script>
 </body>
