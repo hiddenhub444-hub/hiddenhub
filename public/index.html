@@ -1,840 +1,506 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en">
+
 <head>
-    <title>LuaObfuscator - Playground</title>
-    <style>
-        html {
-            /* Only here so we don't get a bright white flash while page loads! */
-            background-color: #1e1e1e;
-            color: lightblue;
-        }
-    </style>
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
-    <link rel="stylesheet" href="/css/code-lua.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Online Lua Obfuscator. Beautify/Minify/Obfuscate all the lua dialects, including LuaU, gLua, Pluto and vanilla Lua 5.1 (and above)." />
-    <meta name="keywords" content="Lua Obfuscator, Online Lua Obfuscation, Lua Beautifier, Lua Minifier, Lua deobfuscator, obfuscator, lua, deobfuscation, roblox obfuscator, roblox protection, packer, crypter, lua emulator, FiveM Obfuscator, LuaU beautifier, Luraph beautifier, Pluto Beautifier, LuaU minifier, OSRS Plugins, Roblox whitelist" />
-    <meta property="og:title" content="Online Lua Obfuscator" />
-    <meta property="og:image" content="/img/logo.png">
-    <meta property="og:description" content="Online Lua Obfuscator. Beautify/Minify/Obfuscate all the lua dialects, including LuaU, gLua, Pluto and vanilla Lua 5.1 (and above)." />
-    <meta property="og:url" content="https://luaobfuscator.com" />
-    <link rel="icon" type="image/png" href="/img/logo.png">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=VT323&display=swap" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <title>Luarmor | Lua Whitelist Service</title>
+
+
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/lth.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/lth.png">
+    <meta name="theme-color" content="#d4af48">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Luarmor - Lua Whitelist Service" />
+    <meta property="og:site_name" content="ð Luarmor" />
+    <meta property="og:description" content="Luarmor is a script whitelisting service made for Roblox.
+
+    Check out our website for details
+    https://luarmor.net/" />
+    <meta property="og:url" content="https://luarmor.net" />
+    <meta property="og:image" content="https://media.discordapp.net/attachments/973020490530689094/1030611589302333481/lth.png" />
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./newlanding/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <div class="main-container" style="height: 100% !important">
-        <style>
-    .line {
-        position: absolute;
-        height: 5px;
-        background-color: black;
-    }
-</style>
-<style>
-    #container {
-        position: relative;
-        width: 600px;
-        height: 400px;
-        overflow: hidden;
-    }
+    <nav class="topbar">
+  <div class="navLeft">
+    <img src="./newlanding/logo.png" alt="Luarmor Logo" height="32">
+    <span class="luarmorText gradient-text gradient-gold">Luarmor</span>
+  </div>
+  <!-- Add a class "desktop-menu" to the navCenter so we can hide it on mobile -->
+  <div class="navCenter desktop-menu">
+    <ul>
+      <li onclick="window.open('https://docs.luarmor.net/', '_blank')">Docs</li>
+      <li onclick="window.location='https://luarmor.net/login'">Dashboard</li>
+      <li onclick="window.open('https://discord.gg/luarmor', '_blank')">Discord</li>
+      <li onclick="window.open('https://docs.luarmor.net/luarmor-user-manual-and-f.a.q', '_blank')">F.A.Q</li>
+      <li onclick="window.location='#prices'">Pricing</li>
+    </ul>
+  </div>
+  <div class="navRight">
+    <button class="signIn" onclick="window.open('https://luarmor.net/login', '_blank')">Sign in</button>
+    <button class="signUp" onclick="window.open('https://luarmor.net/signup', '_blank')">Sign up</button>
+    <!-- Hamburger button added (hidden by default on desktop) -->
+    <button class="menu-toggle">â°</button>
+  </div>
+</nav>
 
-    .bg {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-    }
-
-    .bg1 {
-        background: radial-gradient(circle at top left, #ffcc00, #ff6600);
-        clip-path: polygon(0 0, 100% 0, 0 100%);
-    }
-
-    .bg2 {
-        background: radial-gradient(circle at bottom right, #0066ff, #0033cc);
-        clip-path: polygon(100% 0, 100% 100%, 0 100%);
-    }
-
-    svg {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-    }
-</style>
-
-
-
-
-<div class="notepad-body">
-
-    <!-- MAIN CONTENT START -->
-    <div id="home-landing" class="notepad-test">
-        <div id="home-scroll" class="notepad-script" style="display:block;">
-
-            <!-- Home Page START -->
-            <article id="home-landingpage" class="content-landing" style="display:flex;">
-                <div class="home-page-content" id="home-page-start" style="
-	border-radius: 0% 0% 50% 50% / 10%;
-	background-image: url(/img/banners/roblox_4_big.webp);
-	background-position: center;
-	box-shadow: inset 0px -3px 6px 0px black;
-    overflow-x: hidden;
-    ">
-                    <div style="display:flex; justify-content:center; align-items:center;">
-                        <div class="home-ribbon-background2" style="opacity: 0">
-                            <span style="color: lime;">308.9$ / 65.3$</span>
-                            <br><br>
-                            <span>Yearly hosting goal</span>
-                        </div>
-                        <div class="home-ribbon-background" style="opacity: 0">
-                            <span style="color: lime;">308.9$ / 65.3$</span>
-                            <br><br>
-                            <span>Yearly hosting goal</span>
-                        </div>
-                    </div>
-                
-                    <div class="home-ribbon-background1">
-                        <span style="color: lime;">308.9$ / 65.3$</span>
-                        <br><br>
-                        <span>Yearly hosting goal</span>
-                    </div>                
-                        <a class="home-ribbon" href="https://github.com/sponsors/ferib">Donate on GitHub 🥰</a>
-                    
-                    <div class="home-page-container">
-                        <div class="home-page-row">
-                            <div id="fake-progress-bar">
-                                <div class="progress-bar-back">
-                                    <div class="progress-bar-back-inner"></div>
-                                </div>
-                                <span class="b-inline">Loading please wait...</span>
-                            </div>
-                            <div id="home-lua-actions" class="home-info">
-                                <h1>Protect your Lua Scripts Today!</h1>
-                                <p>You are 2 clicks away from obfuscating your Lua Script! Use the action buttons on the right to select from a wide range of obfuscation features after clicking New File or Upload File.</p>
-                                <div class="button-box">
-                                    <div id="btn-demo" style="cursor: not-allowed" class="big-pink-btn btn-disabled">New File</div>
-                                    <div id="btn-uploadfile" style="cursor: not-allowed; background: #00000060;" class="big-pink-btn-light btn-disabled">Upload File</div>
-                                </div>
-                                <div class="button-box">
-                                    <span id="wait-banner" class="note-homepage">Making sure you ain't a robot...</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--<div class="home-padding"></div>-->
-                </div>
-
-
-                <!-- Stats Flex -->
-                <div class="home-page-content stats-flex" style="
-    /* background: linear-gradient(180deg, rgb(30 30 30 / 0%) 10%, #000000 40%); */
-    padding-bottom: 0;
-    overflow: hidden;
-    /* background: black; */
-    ">
-                    <!-- Background div -->
-                    <div style="
-                        position: absolute;
-                        display: block;
-                        background: linear-gradient(180deg, rgb(30 30 30 / 0%) 0%, #000000 65%);
-                        height: 100%;
-                        width: 100%;
-                        clip-path: path('M 0 0 H 1200 V 112 L 1072 110 L 900 175 L 590 240 L 380 310 L 292 385 L 120 445 L 0 550 Z');
-                        width: 1200px;
-                        right: 0;
-                    "></div>
-                    <div style="
-                        position: absolute;
-                        display: block;
-                        background: linear-gradient(180deg, rgb(30 30 30 / 0%) 0%, #000000 65%);
-                        height: 100%;
-                        width: 100%;
-                        width: calc(100% - 1200px);
-                        left: 0;
-                    "></div>
-
-                    <div class="home-page-container" style="max-width: 100%;">
-                        <div class="img-desktop" style="
-position: absolute;
-    right: -240px;
-    height: 400px;
-    top: -10px;">
-                            
-                        </div>
-                        <div class="home-page-row" style="margin-left: 0;filter: saturate(0.8);">
-                            <div class="home-info" style="
-    /* position: absolute; */
-    height: auto;
-    padding-bottom: 36px;
-    width: 100%;
-">
-                                <h2 class="big-text-desktop" style="color:var(--primary);margin-left: 72px;">Trusted by 15865 registered users!</h2>
-
-
-<!-- Background Chart START -->
-<div style="
-    position: relative;
-    width: 100%;
-    height: 400px;
-">
-
-    <!-- text -->
-    <div style="
-    position: relative;
-    height: auto;
-">
-    <p style="
-        text-align: left;
-        float: left;
-        margin-left: 72px;
-        margin-bottom: 2.5rem;
-        font-size: 1.15rem;
-        color: var(--white);
-        line-height: 1.5;
-        ">Our stats don't lie, simply trusted by thousands of Lua users<br>Weekly stats include over 50 thousand files being protected!<br><br>Most of which are Roblox</p>
+<!-- New mobile dropdown menu (hidden by default) -->
+<div class="mobile-menu">
+  <ul>
+    <li onclick="window.open('https://docs.luarmor.net/', '_blank'); toggleMobileMenu();">Docs</li>
+    <li onclick="window.location='https://luarmor.net/login'; toggleMobileMenu();">Dashboard</li>
+    <li onclick="window.open('https://discord.gg/luarmor', '_blank'); toggleMobileMenu();">Discord</li>
+    <li onclick="window.open('https://docs.luarmor.net/luarmor-user-manual-and-f.a.q', '_blank'); toggleMobileMenu();">F.A.Q</li>
+    <li onclick="window.location='#prices'; toggleMobileMenu();">Pricing</li>
+  </ul>
 </div>
 
-    <!-- container line START -->
-<div style="
-    width: 100%;
-    height: 100%;
-    /* display: flex; */
-    position: absolute;
-    z-index: 3;
-">
-    <div style="
-        position: absolute;
-        display: block;
-        width: 195px;
-        height: 5px;
-        background: indianred;
-        right: 115px;
-        top: 32px;
-        transform: rotateZ(341deg);
-    "></div>
-    <div style="
-        position: absolute;
-        display: block;
-        width: 342px;
-        height: 5px;
-        background: indianred;
-        right: 298px;
-        top: 99px;
-        transform: rotateZ(348deg);
-    "></div>
-    <div style="
-        position: absolute;
-        display: block;
-        width: 208px;
-        height: 5px;
-        background: indianred;
-        right: 622px;
-        top: 167px;
-        transform: rotateZ(341deg);
-    "></div>
-    <div style="
-        position: absolute;
-        display: block;
-        width: 110px;
-        height: 5px;
-        background: indianred;
-        right: 808px;
-        top: 233px;
-        transform: rotateZ(321deg);
-    "></div>
-    <div style="
-        position: absolute;
-        display: block;
-        width: 193px;
-        height: 5px;
-        background: indianred;
-        right: 893px;
-        top: 299px;
-        transform: rotateZ(339deg);
-    "></div>
-    <div style="
-        position: absolute;
-        display: block;
-        width: 164px;
-        height: 5px;
-        background: indianred;
-        right: 1059px;
-        top: 385px;
-        transform: rotateZ(320deg);
-    "></div>
+
+    <div class="heroSection">
+
+	<video autoplay muted loop playsinline class="hero-video">
+    <source src="thing.mp4" type="video/mp4">
+    <!-- Fallback text/image if video doesn't load -->
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Dark overlay to shade the video -->
+  <div class="hero-overlay"></div>
+
+        <div class="heroContent">
+            <div class="heroLeft">
+                <h1 class="heroTitle">Protect & Monetize your code with <span
+                        class="gradient-text gradient-gold">Luarmor</span></h1>
+                <p class="heroDescription">The standard and go-to solution for protecting, monetizing, and managing your
+                    scripts easily.</p>
+            </div>
+        </div>
+        <div class="dashboardContainer">
+            <div class="dashboardWrapper" style="background:rgb(20, 23, 36)">
+                <img src="./newlanding/dashboard.png" alt="Luarmor Dashboard" class="dashboardImage">
+                <img src="./newlanding/rewardspage.png" alt="Luarmor Dashboard" class="dashboardImage">
+            </div>
+        </div>
+    </div>
+    <div class="featuresSection">
+        <div class="featuresContainer">
+            <div class="featuresLeft">
+                <h2 class="featuresTitle">
+                    A <span class="gradient-text gradient-purple">stability-first</span><br>
+                    approach to whitelist<br>
+                    security.
+                </h2>
+                <div class="subtitleWrapper">
+                    <p class="featuresDescription">
+                        Built with <span class="bold">security</span> and <span class="bold">stability</span> in mind.
+                    </p>
+                    <a href="https://docs.luarmor.net" class="learnMore">See how it exactly works â</a>
+                </div>
+            </div>
+            <div class="featuresRight">
+                <div class="mapWrapper">
+                    <img src="./newlanding/map.png" alt="World Map" class="worldMap">
+                    <div class="mapOverlay"></div>
+                    <span class="mapCaption">Luarmor servers on world map above</span>
+                </div>
+            </div>
+            <div class="featureCards">
+                <div class="featureCard glass">
+                    <div class="iconCircle">â¡</div>
+                    <h3>Super Fast</h3>
+                    <p>Luarmor is extremely fast and stable because of its multi-server structure and optimized design
+                        that ensures 0% error rate during authentication.</p>
+                </div>
+                <div class="featureCard glass">
+                    <div class="iconCircle">ð§</div>
+                    <h3>Easy to Integrate</h3>
+                    <p>All you have to do is to upload your script to dashboard and that's it. Luarmor will embed the
+                        whitelist inside your script and obfuscate it using Luraphâ¢ï¸</p>
+                </div>
+                <div class="featureCard glass">
+                    <div class="iconCircle">ð</div>
+                    <h3>Top Security</h3>
+                    <p>Luarmor utilizes commercial methods to keep your script secure. We write the code that re-writes
+                        your code in a secure way.</p>
+                </div>
+                <div class="featureCard glass">
+                    <div class="iconCircle">ð</div>
+                    <h3>Reliable</h3>
+                    <p>Our systems operate with 99.9%+ uptime, including script stability. With Luarmor, your users will
+                        never have whitelist related errors.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="servicesSection">
+        <div class="servicesContainer">
+            <div class="servicesHeader">
+                <h2 class="servicesTitle">
+                    Powerful <span class="gradient-text">Features</span>
+                    You'll Love
+                </h2>
+                <p class="heroDescription">
+                    Everything you need to manage your scripts and users automatically.
+                </p>
+            </div>
+            <div class="serviceCards">
+                <div class="featureCard glass"
+                    onclick="window.open('https://docs.luarmor.net/luarmor-user-manual-and-f.a.q#discord-bot-configuration', '_blank')">
+                    <div class="cardGif">
+                        <img src="./newlanding/discordbotgif.gif" alt="Discord Bot Demo">
+                    </div>
+                    <div class="cardContent">
+                        <div class="cardHeader">
+                            <div class="iconCircle">ð¤</div>
+                            <h3>Discord Bot</h3>
+                        </div>
+                        <p>Luarmor comes with a ready-to-use discord bot with a mini control panel for your users where
+                            they can redeem keys, reset HWID and more. Click to read more.</p>
+                    </div>
+                </div>
+
+                <div class="featureCard glass"
+                    onclick="window.open('https://docs.luarmor.net/luarmor-user-manual-and-f.a.q#id-3-whitelist-users', '_blank')">
+                    <div class="cardGif">
+                        <img src="./newlanding/gen.gif" alt="Key Stocking Demo">
+                    </div>
+                    <div class="cardContent">
+                        <div class="cardHeader">
+                            <div class="iconCircle">ð</div>
+                            <h3>Key Stocking</h3>
+                        </div>
+                        <p>You can mass generate day-locked or lifetime keys & export them to list them on your sellix /
+                            shoppy or whatever platform you are using.</p>
+                    </div>
+                </div>
+
+                <div class="featureCard glass"
+                    onclick="window.open('https://docs.luarmor.net/luarmor-user-manual-and-f.a.q#runtime-variables', '_blank')">
+                    <div class="cardGif">
+                        <img src="./newlanding/runtimevar.png" alt="Runtime Vars Demo">
+                    </div>
+                    <div class="cardContent">
+                        <div class="cardHeader">
+                            <div class="iconCircle">ð</div>
+                            <h3>Runtime Variables</h3>
+                        </div>
+                        <p>Runtime variables allow you to access key-specific data such as discord id, note, expiry date
+                            and more. Allowing you to add custom logic for specific users.</p>
+                    </div>
+                </div>
+
+                <div class="featureCard glass">
+                    <div class="cardGif">
+                        <img src="./newlanding/killswitch.gif" alt="Killswitch Demo">
+                    </div>
+                    <div class="cardContent">
+                        <div class="cardHeader">
+                            <div class="iconCircle">ð</div>
+                            <h3>One Click Kill Switch</h3>
+                        </div>
+                        <p>You can disable, delete, update your scripts anytime you want, and it will immediately take
+                            effect for future executions.</p>
+                    </div>
+                </div>
+
+                <div class="featureCard glass"
+                    onclick="window.open('https://docs.luarmor.net/source-locker', '_blank')">
+                    <div class="cardGif">
+                        <img src="./newlanding/locker.gif" alt="Encrypted Backups Demo">
+                    </div>
+                    <div class="cardContent">
+                        <div class="cardHeader">
+                            <div class="iconCircle">ð</div>
+                            <h3>Encrypted Backups</h3>
+                        </div>
+                        <p>Luarmor gives you the option to encrypt & store your code just in case you ever lose access
+                            to source, or want to revert to an old version of your script. [read more].</p>
+                    </div>
+                </div>
+
+                <div class="featureCard glass"
+                    onclick="window.open('https://docs.luarmor.net/ad-system-rewards', '_blank')">
+                    <div class="cardGif">
+                        <img src="./newlanding/adsys.gif" alt="Ad System Demo">
+                    </div>
+                    <div class="cardContent">
+                        <div class="cardHeader">
+                            <div class="iconCircle">ðµ</div>
+                            <h3>Ad Key System</h3>
+                        </div>
+                        <p>Luarmor has a built-in, compatible and customizable ad link system with an effective
+                            anti-bypass, protecting your revenue and making everything easier.</p>
+                    </div>
+                </div>
+
+                <div class="featureCard glass"
+                    onclick="window.open('https://docs.luarmor.net/luarmor-user-manual-and-f.a.q#key-check-library', '_blank')">
+                    <div class="cardGif">
+                        <img src="./newlanding/keyapi.png" alt="Key Check API Demo">
+                    </div>
+                    <div class="cardContent">
+                        <div class="cardHeader">
+                            <div class="iconCircle">ðï¸</div>
+                            <h3>Key Check API</h3>
+                        </div>
+                        <p>We have a Lua API that allows you to check key details before actually running the obfuscated
+                            script, allowing you to implement custom logic without kicking the user. Click to read more.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="featureCard glass"
+                    onclick="window.open('https://docs.luarmor.net/luarmor-user-manual-and-f.a.q#id-2-upload-your-script', '_blank')">
+                    <div class="cardGif">
+                        <img src="./newlanding/integration.png" alt="bb">
+                    </div>
+                    <div class="cardContent">
+                        <div class="cardHeader">
+                            <div class="iconCircle">ð¡ï¸</div>
+                            <h3>Automatic Integration</h3>
+                        </div>
+                        <p>When you upload your script on dashboard, it will have a whitelist automatically embedded
+                            inside it, and get obfuscated with the industry standard Luraph. Then you just run the
+                            loadstring and that's it.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="statsSection">
+        <div class="container">
+            <div class="statsHeader">
+                <h2 class="heroTitle">Here are our stats</h2>
+                <p class="heroDescription">Actively used by thousands of people.</p>
+            </div>
+            <div class="statsGrid">
+                <div class="statCard glass">
+                    <h3>1.2M+</h3>
+                    <p>Active keys</p>
+                </div>
+                <div class="statCard glass">
+                    <h3>600M+</h3>
+                    <p>Executions every month</p>
+                </div>
+                <div class="statCard glass">
+                    <h3>$315K+</h3>
+                    <p>Generated in Ad Revenue!
+                        <small style="display: block; font-size: 0.75em; color: #666; margin-top: 5px;">
+                            * since November 2024.
+                        </small>
+                    <p>
+                </div>
+
+            </div>
+            <br> </br>
+            <small style="display: block; font-size: 0.9em; color: #464646; margin-top: 5px;">
+                * As of August 2025. Ad revenue is an estimate with <br />average monetization settings assumed for each
+                user.
+            </small>
+        </div>
+    </div>
+    <div class="pricingSection" id="prices">
+        <div class="container">
+            <div class="pricingHeader">
+                <h2 class="heroTitle">Simple and Flat Pricing</h2>
+                <p class="heroDescription">Choose the plan that's right for you.</p>
+            </div>
+            <div class="pricingGrid">
+                <div class="priceCard glass">
+                    <h3>Basic</h3>
+                    <p class="priceSubtitle">If you just started developing scripts, this plan is ideal for you. You can
+                        always switch to a higher plan anytime you want!</p>
+                    <div class="priceAmount">
+                        <span class="price">$15</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <ul class="priceFeatures">
+                        <li class="included">â API & Bot access</li>
+                        <li class="included">â Webhook logs</li>
+                        <li class="included">â Up to 200 keys at once</li>
+                        <li class="included">â Unlimited obf per month</li>
+                        <li class="included">â Up to 2 scripts at once</li>
+                        <li class="included">â 1 project folder</li>
+                        <li class="included">â Ad system (rewards)</li>
+                        <li class="excluded">Ã Keyless (FFA) mode</li>
+                    </ul>
+                    <button class="priceButton" onclick="openPaymentModal()">Buy Invite</button>
+                </div>
+
+                <div class="priceCard glass">
+                    <h3>Premium</h3>
+                    <p class="priceSubtitle">Best plan for most users. If your script hub growing fast, this plan is
+                        recommended.</p>
+                    <div class="priceAmount">
+                        <span class="price">$25</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <ul class="priceFeatures">
+                        <div class="popularBadge">Most Popular</div>
+                        <li class="included">â API & Bot access</li>
+                        <li class="included">â Webhook logs</li>
+                        <li class="included">â Up to <b style="color:rgba(226, 226, 226, 0.958)">1,000</b> keys at once
+                        </li>
+                        <li class="included">â Unlimited obf per month</li>
+                        <li class="included">â Up to 8 scripts at once</li>
+                        <li class="included">â 3 project folders</li>
+                        <li class="included">â Ad system (rewards)</li>
+                        <li class="included">â Keyless (FFA) mode</li>
+                    </ul>
+                    <button class="priceButton popular" onclick="openPaymentModal()">Buy Invite</button>
+                </div>
+
+                <div class="priceCard glass popular">
+                    <h3>Pro</h3>
+                    <p class="priceSubtitle">Everything in premium with higher usage limits. Recommended for high
+                        quality scripts with hundreds of buyers.</p>
+                    <div class="priceAmount">
+                        <span class="price">$40</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <ul class="priceFeatures">
+                        <li class="included">â API & Bot access</li>
+                        <li class="included">â Webhook logs</li>
+                        <li class="included">â Up to <b style="color:rgb(224, 138, 255)">10,000</b> keys at once</li>
+                        <li class="included">â <b style="color:rgb(224, 138, 255)">Unlimited</b> obf per month</li>
+                        <li class="included">â Up to <b style="color:rgb(224, 138, 255)">18</b> scripts at once</li>
+                        <li class="included">â 6 project folders</li>
+                        <li class="included">â Ad system (rewards)</li>
+                        <li class="included">â Keyless (FFA) mode</li>
+                    </ul>
+                    <button class="priceButton" onclick="openPaymentModal()">Buy Invite</button>
+                </div>
+
+                <div class="priceCard glass">
+                    <h3>Enterprise</h3>
+                    <p class="priceSubtitle">For large hubs with specialized needs. Enterprise users can request custom
+                        features.</p>
+                    <div class="priceAmount">
+                        <span class="price"></span>
+                        <span class="period">Crypto Currencies only</span>
+                    </div>
+                    <ul class="priceFeatures">
+                        <li class="included">ð API ratelimit bypass</li>
+                        <li class="included">ð Advanced access control methods
+                            <small style="display: block; font-size: 0.9em; color: #666; margin-top: 5px;">
+                                * e.g max instance limit per key, execution cap, hwid-less (only key) execution, clonned
+                                emulator blocking / allowing etc.
+                            </small>
+                        </li>
+                        <li class="included">ð Custom URLs in ad system
+                            <small style="display: block; font-size: 0.9em; color: #666; margin-top: 5px;">
+                                * e.g ads.luarmor.net/godhub
+                            </small>
+                        </li>
+
+                        <li class="included">â 50k keys & 60 scripts</li>
+                        <li class="included">â 10 projects & unlimited obf.</li>
+                        <li class="included">+ Everything in Pro</li>
+                    </ul>
+                    <button class="priceButton" onclick="window.open('https://discord.gg/luarmor', '_blank')">Contact
+                        Us</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="footerContainer">
+            <div class="footerTop">
+                <div class="footerLogo">
+                    <img src="./newlanding/logo.png" alt="Luarmor Logo" height="32">
+                    <span class="luarmorText gradient-text gradient-gold">Luarmor</span>
+                </div>
+                <div class="footerLinks">
+                    <div class="linkColumn">
+                        <h4>Product</h4>
+                        <ul>
+                            <li><a href="https://luarmor.net/faq">FAQ</a></li>
+                            <li><a href="https://docs.luarmor.net/">API Documentation</a></li>
+                            <li><a href="https://discord.gg/luarmor">Discord</a></li>
+                        </ul>
+                    </div>
+                    <div class="linkColumn">
+                        <h4>Stuff</h4>
+                        <ul>
+                            <li><a href="https://luarmor.net/tos">Terms of Service</a></li>
+                            <li><a href="https://luarmor.net/tos">Privacy Policy</a></li>
+                            <li><a href="https://discord.gg/luarmor">Contact</a></li>
+                            <li><a href="https://luarmor.net/submit_request">Submit a Request / Suggestion</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footerBottom">
+                <p>Landing page designed by the best front end designer Riley (real AF)</p>
+            </div>
+        </div>
+    </footer>
+    <!-- Overlay -->
+    <div id="payment-modal-overlay" class="modal-overlay">
+        <!-- Modal Dialog -->
+        <div class="modal-dialog">
+            <button class="modal-close" onclick="closePaymentModal()">Ã</button>
+            <h2>Select Payment Method</h2>
+            <p>* You will receive an invite code that can be used to SIGN UP and have 30 days of access, or EXTEND an existing account for +30 days.<br></br>* Multiple invite codes of the same plan can be redeemed at once to stack days. <br></br>* Invite codes do not have expiry dates, they can be redeemed anytime.<br></br>* You can only upgrade/downgrade plans in the last 7 days of your current plan. You do so by redeeming the invite code of the new plan. You will have +30 days and your plan will be immediately changed.</p>
+
+            <div class="payment-options">
+                <button class="payment-button crypto" onclick="redirectToCrypto()">Crypto (Official Store)</button>
+                <button class="payment-button card" onclick="redirectToCard()">ð³ Debit/Credit Card / ApplePay / GPay (Reseller)</button>
+		 <button class="payment-button card" onclick="redirectToPaypal()">PayPal (Reseller)</button>           
+	<button class="payment-button card" onclick="redirectToRus()">[RU] FunPay (Reseller)</button> 
 </div>
-    <!-- container line EMD -->
-
-    <!-- container numbers START-->
-    <div style="
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    filter: contrast(0.8);
-">
-    <div style="
-        margin-right: 0;
-        margin-top: 0;
-        height: 100%;
-        font-size: 32px;
-        line-height: 50px;
-    ">12000</div>
-    <div style="
-        margin-right: 0;
-        margin-top: 0;
-        height: 100%;
-        font-size: 32px;
-        line-height: 50px;
-    ">10000</div>
-    <div style="
-        margin-right: 0;
-        margin-top: 0;
-        height: 100%;
-        font-size: 32px;
-        line-height: 50px;
-    ">8000</div>
-    <div style="
-        margin-right: 0;
-        margin-top: 0;
-        height: 100%;
-        font-size: 32px;
-        line-height: 50px;
-    ">6000</div>
-    <div style="
-        margin-right: 0;
-        margin-top: 0;
-        height: 100%;
-        font-size: 32px;
-        line-height: 50px;
-    ">4000</div>
-    <div style="
-        margin-right: 0;
-        margin-top: 0;
-        height: 100%;
-        font-size: 32px;
-        line-height: 50px;
-    ">2000</div>
-    </div>
-    <!-- container numbers END-->
-
-    <!-- container horizontal line START -->
-<div style="
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-">
-    <div style="
-        height: 5px;
-        background: indianred;
-        width: 121px;
-        margin-right: 0;
-        margin-top: 0;
-    "></div>
-    <div style="
-        height: 5px;
-        background: var(--color-background-light-2);
-        width: 300px;
-        margin-right: 0;
-        margin-top: 0;
-    "></div>
-    <div style="
-        height: 5px;
-        background: var(--color-background-light-2);
-        width: 636px;
-        margin-right: 0;
-        margin-top: 0;
-    "></div>
-    <div style="
-        height: 5px;
-        background: var(--color-background-light-2);
-        width: 828px;
-        margin-right: 0;
-        margin-top: 0;
-    "></div>
-    <div style="
-        height: 5px;
-        background: var(--color-background-light-2);
-        width: 900px;
-        margin-right: 0;
-        margin-top: 0;
-    "></div>
-    <div style="
-        height: 5px;
-        background: var(--color-background-light-2);
-        width: 1077px;
-        margin-right: 0;
-        margin-top: 0;
-    "></div>
-    <div style="
-        height: 5px;
-        margin-right: 0;
-        margin-top: 0;
-        margin: 0;
-        position: relative;
-        bottom: -36px;
-        background: indianred;
-        position: absolute;
-        width: 100%;
-    "></div>
-    <div style="
-        height: 5px;
-        margin-right: 0;
-        position: relative;
-        bottom: -36px;
-        background: var(--color-background-light-2);
-        position: absolute;
-        width: 96%;
-        right: 0;
-        width: 1197px;
-    "></div>
-        <!-- Background Chart END -->
-    
-    </div>
-    <!-- container horizontal line END -->
-</div>
-                                
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-
-
-                <!-- REST API -->
-                <div class="home-page-content" style="padding-bottom: 0">
-                    <div class="home-page-container">
-                        <!--
-                        <div class="img-desktop" style="
-position: absolute;
-    left: -220px;
-    height: 600px;
-    top: -10px;">
-                            <img style="    
-    height: 100%;
-    width: 100%;" src="./img/cogwheels.png" width="300" height="300" />
-                        -->
-                        <div class="img-desktop" style="
-    position: absolute;
-    left: -140px;
-    height: 430px;
-    top: 10px;">
-                            <img alt="doodle cogwheel big" style="    
-        height: 100%;
-        width: 100%;" src="./img/cogwheel_a.png" id="cogwheel_a" width="215" height="211" />
-                        </div>
-                        <div class="img-desktop" style="
-    position: absolute;
-    height: 192px;
-    left: 148px;
-    top: 378px;">
-                            <img alt="doodle cogwheel small" style="
-    height: 100%;
-    width: 100%;" src="./img/cogwheel_b.png" id="cogwheel_b" width="96" height="99" />
-                        </div>
-
-                        <div class="home-page-row">
-                            <div class="home-info" style="
-    width: 80%;
-    margin-right: 30px;">
-                                <h2 class="big-text-desktop" style="color:var(--primary); float:right;">Say hello to automation 🤖</h2>
-                                <p style="
-    float: right;
-    text-align: right;">Begin automating your obfuscation requirements today. Get your <a href="/forum/keys">API Key</a> and access our API Docs to initiate your journey.
-                                </p>
-                                <div class="button-box" style="justify-content: flex-end;">
-                                    <a href="/forum/docs">
-                                        <div class="big-pink-btn">Read the docs</div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="home-page-content" style="
-    background: linear-gradient(180deg,rgb(30 30 30 / 0%) 0%,rgba(0,0,0,1) 100%);
-	padding-bottom: 0;overflow: hidden;">
-                    <div class="home-page-container">
-                        <div class="img-desktop" style="
-position: absolute;
-    right: -240px;
-    height: 400px;
-    top: -10px;">
-                            <img alt="doodle discord logo" style="
-    height: 100%;
-    width: 100%;" src="./img/discord.png" width="300" height="300" />
-                        </div>
-                        <div class="home-page-row" style="margin-left: 0; filter: saturate(0.8);">
-                            <div class="home-info">
-                                <h2 class="big-text-desktop" style="color:var(--primary)">Join the community!</h2>
-                                <p>Our beloved Discord server may be a thing of the past, but fear not, for we have created a new haven for unrestricted conversation and free expression!</p>
-                                <div class="button-box" style="justify-content: flex-start; filter: saturate(0.7);">
-                                    <div id="fire-container"></div>
-                                    <a href="https://discord.gg/vYrmxByrWq">
-                                        <!--<div class="big-pink-btn" style="margin-right: 10px; border: 3px solid darkgray; background-color: gray!important; cursor:not-allowed; text-decoration: line-through">Discord 😵</div>-->
-                                        <div class="big-pink-btn" style="margin-right: 10px; box-shadow: 2px 2px 5px 2px red; color:red;">Discord 🚀</div>
-                                    </a>
-                                    <a href="/forum/">
-                                        <div class="big-pink-btn-light">Visit Community</div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                
-
-            </article>
-            <footer class="home-footer-dark">
-                <div style="padding: 12px; opacity: 0.2">
-                    <span>Copyrighted 2022-2026</span> - <span><a href="/privacy_policy.txt">Privacy</a></span>
-                </div>
-            </footer>
-
         </div>
     </div>
 
-    <div id="home-ide" class="notepad-test" style="display: none; /* default not shown? */">
-        
-        <div id="cf-turnstile"></div> <!-- class="cf-turnstile" data-sitekey="0x4AAAAAAARcYrR12jJAIfCB"></div> -->
-
-
-        <!-- Lua Session navigation bar -->
-        <div class="notepad-top">
-            <ul id="lua-sessions">
-            </ul>
-            <ul id="lua-top-mobile">
-                <li style="    
-display: block;
-height: 100%;
-padding: 5px;"><div style="
-    position: absolute;
-    display: block;
-    width: 32px;
-    height: 32px;
-    background-color: #252525;
-    border-radius: 12px;
-    padding: 2px;">
-                    </div>
-                    <span style="color: var(--white); margin-left: 42px; margin-top: 5px; position: absolute;"> - LuaObfuscator</span>
-                </li>
-            </ul>
-        
-            <!-- ACCOUNT START -->
-            <div style="display: flex; margin-right: 12px; height: 100%;">
-                    <form method="POST" action="/forum/OAuth2/Discord">
-                        <input style="cursor: pointer;" class="pink-btn-light" type="submit" value="Login" />
-                    </form>
-            </div>
-            <!-- ACCOUNT END -->
-
-        </div>
-        
-        <!-- Lua script playground -->
-        <div class="notepad-script">
-            <div id="toolbox-download-btn" class="big-pink-btn">Download</div>
-            <div class="notepad-lines">
-                <ul id="notepad-lines-ul"></ul>
-            </div>
-            <!--
-            <div id="code-tooltip" style="display: none;" class="tooltip">
-                [Action]
-            </div>
-            -->
-            <pre style="display: block;
-    position: relative;
-    display: inline-table;
-    height: 100%;" class="lasm-script"><div id="err-market-h" style="
-    display: inline-block;
-    position: absolute;
-    background: #ff000069;
-    left: 50px;
-    height: 100%;
-    width: 110px;
-    opacity: 0;
-"></div><div id="err-market-h2" style="
-    display: inline-block;
-    position: absolute;
-    background: #ff000069;
-    left: 50px;
-    height: 100%;
-    width: 110px;
-    opacity: 0;
-"></div><div id="err-market-v" style="
-    display: inline-block;
-    position: absolute;
-    width: 100$;
-    width: 100%;
-    height: 20px;
-    background: #ff000069;
-    top: 324px;
-    opacity: 0;
-"></div><code id="lua-codewindow" class="lang-lua" contenteditable="true" spellcheck="false" style="filter: blur(10px);"></code></pre>
-            <input type="file" id="lua-file" style="display:none" />
-        </div>
-        
-        <!-- Console -->
-        <div id="lua-console" class="notepad-bottom" style="display: none;
-    height: 160px;
-    width: 100%;
-    background-color: #181818;">
-            <div style="display: block;
-    width: 100%;
-    height: 100%;
-    /* margin: 3px; */
-    /* padding: 4px; */
-    display: flex;">
-                <ul id="lua-console-ul" style="
-    display: flex;
-    width: 100%;
-    color: dimgray;
-    font-family: consolas;
-    /*background-color: #1E1E1E;*/
-    flex-wrap: nowrap;
-    align-content: stretch;
-    margin: 5px;
-    border: 1px solid black;
-    border-width: 1px 0 0 0;
-    height: auto;
-    padding: 0px 8px 4px 0px;
-    overflow: auto;
-    flex-direction: column-reverse;
-    /*background: url(/img/noise.png);*/
-    font-size: 16px;
-    line-height: 18px;
-    background: #0e0e0e;
-"></ul>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Main Navigation -->
-    <div id="notepad-toolbox1" class="notepad-toolbox">
-        <!-- Community -->
-        <a style="text-decoration: none;" href="/forum"><div class="toolbox-collapsible collapsible-header">Community</div></a>
-        <div class="notepad-toolbox-spacer">
-
-        </div>
-
-        <!-- All Obfuscation Options, will leave this here until Alpha is over? -->
-        <div class="toolbox-collapsible">All Actions</div>
-        <div class="notepad-toolbox-spacer">
-            <span id="lua-cleanup" class="toolbox-button" style="background-color: red;">CLEANUP</span>
-            <span id="lua-junkif" class="toolbox-button" style="background-color: lightskyblue;">Junk-If</span>
-            <span id="lua-reverseif" class="toolbox-button" style="background-color: lightskyblue;">Reverse-If</span>
-            <span id="lua-cffv1" class="toolbox-button" style="background-color: lightskyblue;">CFF v1*</span>
-            <span id="lua-encfdec" class="toolbox-button" style="background-color: lightskyblue;">Enc Func Dec</span>
-            <span id="lua-swizzle" class="toolbox-button" style="background-color: lightskyblue;">Swizzle</span>
-            <span id="lua-literals" class="toolbox-button" style="background-color: lightskyblue;">Literals</span>
-            <span id="lua-mbav1" class="toolbox-button" style="background-color: lightskyblue;">MBAv1</span>
-            <span id="lua-strings" class="toolbox-button" style="background-color: lightskyblue;">Strings</span>
-            <span id="lua-tableindirection" class="toolbox-button" style="background-color: lightskyblue;">Table Indirection</span>
-            <span id="lua-bit32" class="toolbox-button" style="background-color: lightskyblue;">Add bit32</span>
-            <span id="lua-rmPLH" class="toolbox-button" style="background-color: lightskyblue;">Remove LPH Macros</span>
-            <span id="lua-minify" class="toolbox-button" style="background-color: lightskyblue;">Minify*</span>
-            <span id="lua-beautify" class="toolbox-button" style="background-color: lightskyblue;">Beautify</span>
-            <span id="lua-luamina-push" class="toolbox-button" style="background-color: darkcyan;"><i>Lua</i>mina PUSH</span>
-            <span id="lua-luamina-pull" class="toolbox-button" style="background-color: darkcyan;"><i>Lua</i>mina PULL</span>
-            <span id="lua-demo_vm" class="toolbox-button" style="background-color: rgb(46, 162, 235);">Demo VM*</span>
-            <span id="lua-reset" class="toolbox-button" style="background-color: yellowgreen;">RESET&nbsp;</span>
-            <p style="color: indianred; bottom:0px">*Experimental</p>
-        </div>
-
-        <!-- Pre-defined obfuscation configs -->
-        <div class="toolbox-collapsible toolbox-hit">Obfuscation</div>
-        <div style="display: block;" class="notepad-toolbox-spacer">
-            <!--<span id="lua-pre-6" class="toolbox-button" style="background-color: red;">Virtualized Good</span>-->
-            <!--<span id="lua-pre-6" class="toolbox-button" style="background-color: red;">Virtualized Basic</span>-->
-            <span id="lua-pre-0" class="toolbox-button" style="background-color: darkred;">Dystropic Malevolence</span>
-            <span id="lua-pre-1" class="toolbox-button" style="background-color: orangered;">Chaotic Evil</span>
-            <span id="lua-pre-2" class="toolbox-button" style="background-color: orange;">Chaotic Good</span>
-            <!--<span id="lua-pre-5" class="toolbox-button" style="background-color: yellowgreen;">Virtualized Fast</span>-->
-            <!-- Lets face it, skids wont know which button if I didn't mark it -->
-            <span id="lua-pre-6" class="toolbox-button" style="
-font-size: 28px; 
-font-weight: 700;
-background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-background-color: yellowgreen;
-border: 2px solid yellowgreen;
-box-shadow: inset 0px 0 4px yellowgreen;
-text-align: center;
-">OBFUSCATE v1</span>
-            <span id="lua-pre-5" class="toolbox-button" style="background-color: yellowgreen;">OBFUSCATE (old)</span>
-            <span id="lua-pre-3" class="toolbox-button" style="background-color: greenyellow;">Basic Good</span>
-            <span id="lua-pre-4" class="toolbox-button" style="background-color: lightgreen;">Basic Minimal </span>
-            <span id="lua-beautify3" class="toolbox-button" style="background-color: lightskyblue;">Beautify</span>
-            <span style="margin-top: 15px; color:white; text-align: center" id="lua-makesus" class="toolbox-button toolbox-button-rgb"><span style=
-               "width: 100%;
-    display: inline-block;
-    line-height: 32px;
-    background: #5c258d;
-    background: -webkit-linear-gradient( to right bottom, #4389a2, #5c258d );
-    background: linear-gradient( to right bottom, #4389a2, #5c258d );
-    border-radius: 25px;
-    padding: 5px;
-    box-sizing: border-box;
-    margin-bottom: 10px;
-}"><img style="float:left" width="32" height="32" src="/img/icons/kindasus.webp" />Make Sus<img style="transform: scaleX(-1); float:right;" width="32" height="32" src="/img/icons/kindasus.webp" /></span></span>
-            <!--
-            <span style="display:block; width: 230px; margin-top: 15px; color:white;">
-                <input name="lua-version" id="rad-roblox" type="radio" value="roblox" checked />
-                <label for="rad-roblox">Roblox</label><br/>
-                <input name="lua-version" id="rad-fivem" type="radio" value="roblox"/>
-                <label for="rad-fivem">FiveM</label><br />
-                <input name="lua-version" id="rad-lua51" type="radio" value="roblox"/>
-                <label for="rad-lua51">Lua 5.1</label><br/>
-                <input name="lua-version" id="rad-wow" type="radio" value="roblox"/>
-                <label for="rad-wow">Wow</label><br />
-                <input name="lua-version" id="rad-GG" type="radio" value="roblox"/>
-                <label for="rad-GG">GG</label><br />
-            </span>
-            -->
-
-
-        </div>
-
-        <!-- Miscellaneous -->
-        <div class="toolbox-collapsible">Miscellaneous</div>
-        <div class="notepad-toolbox-spacer">
-            <span id="lua-copytoclipboard" class="toolbox-button" style="background-color: lightskyblue;">Copy to clipboard</span>
-            <span id="lua-evaluate" class="toolbox-button" style="background-color: lightskyblue;">Evaluate Performance 😳</span>
-            <span id="lua-beautify2" class="toolbox-button" style="background-color: lightskyblue;">Beautify</span>
-            <span id="lua-minify2" class="toolbox-button" style="background-color: lightskyblue;">Minify</span>
-            <span id="lua-undo" class="toolbox-button" style="background-color: mediumpurple;">Undo</span>
-            <span id="lua-undoAll" class="toolbox-button" style="background-color: mediumpurple;">Undo ALL</span>
-            <span id="lua-reset2" class="toolbox-button" style="background-color: yellowgreen;">RESET&nbsp;</span>
-        </div>
-
-        <!-- Test Deobfuscation Stuff -->
-        
-        <!-- Experimental -->
-        <div class="toolbox-collapsible" style="color: #ff6969!important">Experimental</div>
-        <div class="notepad-toolbox-spacer">
-            <span id="lua-variables" class="toolbox-button" style="background-color: lightskyblue;">Locals**</span>
-            <span id="lua-glookup" class="toolbox-button" style="background-color: lightskyblue;">_G lookup*</span>
-            <span id="lua-cffv1-exp" class="toolbox-button" style="background-color: lightskyblue;">CFF v1*</span>
-            <span id="lua-ssa" class="toolbox-button" style="background-color: lightskyblue;">SSA-ish</span>
-            <span id="lua-transpile51" class="toolbox-button" style="background-color: lightskyblue;">To lua 5.1</span>
-            <span id="lua-const" class="toolbox-button" style="background-color: lightskyblue;">LPH_CONST macro</span>
-            <span id="lua-demo_vm-exp" class="toolbox-button" style="background-color: rgb(46, 162, 235);">Demo VM*</span>
-            <span id="lua-wpacker" class="toolbox-button" style="background-color: rgb(46, 162, 235);">WPacker*</span>
-            <!--<span id="lua-virtualize" class="toolbox-button" style="background-color: rgb(46, 162, 235);">Virtualize</span>-->
-            <!--<span id="lua-devirtualize" class="toolbox-button" style="background-color: rgb(235, 46, 219);">Devirtualize</span>-->
-            <!--<span id="lua-emulate" class="toolbox-button" style="background-color: chartreuse;">Execute</span>-->
-            <p style="color: indianred; bottom:0px">*Might break</p>
-            <p style="color: indianred; bottom:0px">**Will break</p>
-        </div>
-
-        <div class="toolbox-collapsible toolbox-stats">
-            <span style="font-size: 26px; line-height: 30px;">
-                <div style="display:inline-block; margin-top: 5px;">
-                            <img style="float: left;" src="/img/count_0.png" width="16" height="21" />
-                            <img style="float: left;" src="/img/count_0.png" width="16" height="21" />
-                            <img style="float: left;" src="/img/count_0.png" width="16" height="21" />
-                            <img style="float: left;" src="/img/count_0.png" width="16" height="21" />
-                            <img style="float: left;" src="/img/count_0.png" width="16" height="21" />
-                            <img style="float: left;" src="/img/count_0.png" width="16" height="21" />
-                </div>
-            </span>
-        </div>
-        <div class="notepad-toolbox-spacer">
-            <span style="position:absolute; color: lightgreen; font-style: italic;">0 files have been obfuscated in the last 30 days</span>
-        </div>
-        
-        
-
-
-    </div>
-    
-    <!-- MAIN CONTENT END -->
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function(event) {
-        let fireContainer = document.getElementById("fire-container");
-        function createParticles(fireContainer, num, leftSpacing) {
-            for (let i = 0; i < num; i += 1) {
-                let particle = document.createElement("div");
-                particle.style.left = `calc((100% - 5em) * ${i / leftSpacing})`;
-                particle.setAttribute("class", "particle");
-                particle.style.animationDelay = 4 * Math.random() + "s";
-                fireContainer.appendChild(particle);
-            }
+    <script>
+        function openPaymentModal() {
+            document.getElementById('payment-modal-overlay').style.display = 'flex';
         }
 
-        // fire
-        createParticles(fireContainer, 90, 60);
+        function closePaymentModal() {
+            document.getElementById('payment-modal-overlay').style.display = 'none';
+        }
 
-        // cogwheels
-        var wheelA = document.getElementById("cogwheel_a");
-        var wheelB = document.getElementById("cogwheel_b");
-        console.log("wheels: ", wheelA, wheelB)
-        var homescroll = document.getElementById("home-scroll")
-        homescroll.addEventListener("scroll", function () {
-            var value = homescroll.scrollTop * 0.1;
-            console.log(value)
-            wheelA.style.transform = `rotate(${value}deg)`;
-            value = value * 2;
-            wheelB.style.transform = `rotate(-${value}deg)`;
-        });
+        function redirectToCrypto() {
+            window.open('https://luarmor.net/crypto', '_blank');
+        }
+        function redirectToCard() {
+window.open('https://angxlzz.store/product/luarmor/', '_blank');
+//            window.open('https://angxlzzstore.sellhub.cx/product/luarmor/', '_blank');
+        }
+	function redirectToPaypal() {
+		window.open('https://zephyrion.sell.app/', '_blank');
+	}
 
-        
+	function redirectToRus() {
+		window.open('https://funpay.com/en/users/7412687/', '_blank');
+	}	
 
+   function toggleMobileMenu() {
+    var mobileMenu = document.querySelector('.mobile-menu');
+    mobileMenu.classList.toggle('open');
+  }
+  
+  // Attach click listener to the hamburger button
+  document.querySelector('.menu-toggle').addEventListener('click', toggleMobileMenu);
 
-            // init turnstile
-            window.turnstileCallback = function (token) {
-                let waitbanner = document.getElementById("wait-banner");
-                let newfile = document.getElementById("btn-demo");
-                let uploadfile = document.getElementById("btn-uploadfile");
-
-                waitbanner.style.display = "none"
-                newfile.style.cursor = "pointer"
-                uploadfile.style.cursor = "pointer"
-                newfile.disabled = false
-                uploadfile.disabled = false
-                newfile.classList.remove("btn-disabled");
-                uploadfile.classList.remove("btn-disabled");
-            }
-            window.onloadTurnstileCallback = function() {
-                turnstile.render(document.getElementById("cf-turnstile"), {
-                    sitekey: '0x4AAAAAAARcYrR12jJAIfCB',
-                    callback: turnstileCallback,
-                })
-            }
-                });
-</script>
-
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" async defer></script> 
-
-    </div>
-
-    <script defer src="/js/luaEngine.js"></script>
-    <script defer src="/js/index.js"></script>
-    
-    <script>
-        var maincontainer = document.getElementsByClassName('main-container')[0];
-        var notepadbody = document.getElementsByClassName('notepad-body')[0];
-        const observer = new MutationObserver(function (mutations, observer) {
-            maincontainer.style.height = "100%";
-            if (notepadbody != null)
-                notepadbody.style.height = "100%";
-        });
-        observer.observe(maincontainer, {
-            attributes: true,
-            attributeFilter: ['style']
-        });
     </script>
 </body>
+
 </html>
