@@ -1,506 +1,289 @@
-<!DOCTYPE html>
-<html lang="en">
-
+!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <!-- ===============================================-->
-    <!--    Document Title-->
-    <!-- ===============================================-->
-    <title>Luarmor | Lua Whitelist Service</title>
-
-
-    <!-- ===============================================-->
-    <!--    Favicons-->
-    <!-- ===============================================-->
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/lth.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/lth.png">
-    <meta name="theme-color" content="#d4af48">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Luarmor - Lua Whitelist Service" />
-    <meta property="og:site_name" content="ð Luarmor" />
-    <meta property="og:description" content="Luarmor is a script whitelisting service made for Roblox.
-
-    Check out our website for details
-    https://luarmor.net/" />
-    <meta property="og:url" content="https://luarmor.net" />
-    <meta property="og:image" content="https://media.discordapp.net/attachments/973020490530689094/1030611589302333481/lth.png" />
-
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./newlanding/main.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>Paste</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1 shrink-to-fit=1">
+  <link rel="icon" href="favicon.png" sizes="any" type="image/png;">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css" integrity="sha512-2bBQCjcnw658Lho4nlXJcc6WkV/UxpE/sAokbXPxQNGqmNdQrWqtw26Ns9kFF/yG792pKR1Sx8/Y1Lf1XN4GKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css" integrity="sha512-t7Few9xlddEmgd3oKZQahkNI4dS6l80+eGEzFQiqtyVYdvcSG2D3Iub77R20BdotfRPA9caaRkg1tyaJiPmO0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gijgo/1.9.14/combined/css/gijgo.min.css" integrity="sha512-9aomOZ/zmsiod+U3sukisKwsGHSlhezpxtRx7LFNEdvqnnVi7/tKgAS0v4kbH0pqY1UNs4BgYwTkRUDtLWk5Kw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="static/paste.css" rel="stylesheet">
 </head>
-
 <body>
-    <nav class="topbar">
-  <div class="navLeft">
-    <img src="./newlanding/logo.png" alt="Luarmor Logo" height="32">
-    <span class="luarmorText gradient-text gradient-gold">Luarmor</span>
-  </div>
-  <!-- Add a class "desktop-menu" to the navCenter so we can hide it on mobile -->
-  <div class="navCenter desktop-menu">
-    <ul>
-      <li onclick="window.open('https://docs.luarmor.net/', '_blank')">Docs</li>
-      <li onclick="window.location='https://luarmor.net/login'">Dashboard</li>
-      <li onclick="window.open('https://discord.gg/luarmor', '_blank')">Discord</li>
-      <li onclick="window.open('https://docs.luarmor.net/luarmor-user-manual-and-f.a.q', '_blank')">F.A.Q</li>
-      <li onclick="window.location='#prices'">Pricing</li>
-    </ul>
-  </div>
-  <div class="navRight">
-    <button class="signIn" onclick="window.open('https://luarmor.net/login', '_blank')">Sign in</button>
-    <button class="signUp" onclick="window.open('https://luarmor.net/signup', '_blank')">Sign up</button>
-    <!-- Hamburger button added (hidden by default on desktop) -->
-    <button class="menu-toggle">â°</button>
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" id="navbar">
+  <div class="container-fluid">
+    <span class="navbar-brand" href="#">
+      <img src="favicon.png" alt="Logo" width="24" height="28" class="d-inline-block align-middle me-1" id="pb_icon">
+      Paste
+    </span>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar_supported_content"
+            aria-controls="navbar_supported_content" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="bi bi-chevron-down"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar_supported_content">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="https://nekoid.cc">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="https://github.com/rikkaneko/paste#api-specification">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="https://qrcode.nekoid.cc">QRCode</a>
+        </li>
+      </ul>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Paste ID" aria-label="go" id="go_paste_id"
+               maxlength="4" data-bs-toggle="tooltip" data-bs-placement="bottom"
+               title="Paste ID should be in 4 characters.">
+        <button class="btn btn-outline-success me-2" type="button" id="go_button">Go</button>
+        <button class="btn btn-outline-success" type="button" id="view_info_button">Detail</button>
+      </form>
+    </div>
   </div>
 </nav>
 
-<!-- New mobile dropdown menu (hidden by default) -->
-<div class="mobile-menu">
-  <ul>
-    <li onclick="window.open('https://docs.luarmor.net/', '_blank'); toggleMobileMenu();">Docs</li>
-    <li onclick="window.location='https://luarmor.net/login'; toggleMobileMenu();">Dashboard</li>
-    <li onclick="window.open('https://discord.gg/luarmor', '_blank'); toggleMobileMenu();">Discord</li>
-    <li onclick="window.open('https://docs.luarmor.net/luarmor-user-manual-and-f.a.q', '_blank'); toggleMobileMenu();">F.A.Q</li>
-    <li onclick="window.location='#prices'; toggleMobileMenu();">Pricing</li>
-  </ul>
+<div class="position-relative mb-2 z-3" id="alert-container">
+
 </div>
 
-
-    <div class="heroSection">
-
-	<video autoplay muted loop playsinline class="hero-video">
-    <source src="thing.mp4" type="video/mp4">
-    <!-- Fallback text/image if video doesn't load -->
-    Your browser does not support the video tag.
-  </video>
-
-  <!-- Dark overlay to shade the video -->
-  <div class="hero-overlay"></div>
-
-        <div class="heroContent">
-            <div class="heroLeft">
-                <h1 class="heroTitle">Protect & Monetize your code with <span
-                        class="gradient-text gradient-gold">Luarmor</span></h1>
-                <p class="heroDescription">The standard and go-to solution for protecting, monetizing, and managing your
-                    scripts easily.</p>
-            </div>
-        </div>
-        <div class="dashboardContainer">
-            <div class="dashboardWrapper" style="background:rgb(20, 23, 36)">
-                <img src="./newlanding/dashboard.png" alt="Luarmor Dashboard" class="dashboardImage">
-                <img src="./newlanding/rewardspage.png" alt="Luarmor Dashboard" class="dashboardImage">
-            </div>
-        </div>
+<div class="d-flex justify-content-center vh-100" style="margin-top: 130px">
+  <form class="container" style="max-width: 400px;" id="upload_form">
+    <div class="mb-3">
+      <div><label class="form-label">Paste Type</label></div>
+      <div class="btn-group w-100" role="group" aria-label="Paste type group">
+        <input type="radio" class="btn-check" name="paste-type" id="paste_type_file" autocomplete="off" checked
+               onclick="select_input_type('file')" value="file">
+        <label class="btn btn-outline-primary" for="paste_type_file">File</label>
+        <input type="radio" class="btn-check" name="paste-type" id="paste_type_text" autocomplete="off"
+               onclick="select_input_type('text')" value="text">
+        <label class="btn btn-outline-primary" for="paste_type_text">Text</label>
+        <input type="radio" class="btn-check" name="paste-type" id="paste_type_url" autocomplete="off"
+               onclick="select_input_type('url')" value="url">
+        <label class="btn btn-outline-primary" for="paste_type_url">URL</label>
+      </div>
     </div>
-    <div class="featuresSection">
-        <div class="featuresContainer">
-            <div class="featuresLeft">
-                <h2 class="featuresTitle">
-                    A <span class="gradient-text gradient-purple">stability-first</span><br>
-                    approach to whitelist<br>
-                    security.
-                </h2>
-                <div class="subtitleWrapper">
-                    <p class="featuresDescription">
-                        Built with <span class="bold">security</span> and <span class="bold">stability</span> in mind.
-                    </p>
-                    <a href="https://docs.luarmor.net" class="learnMore">See how it exactly works â</a>
-                </div>
-            </div>
-            <div class="featuresRight">
-                <div class="mapWrapper">
-                    <img src="./newlanding/map.png" alt="World Map" class="worldMap">
-                    <div class="mapOverlay"></div>
-                    <span class="mapCaption">Luarmor servers on world map above</span>
-                </div>
-            </div>
-            <div class="featureCards">
-                <div class="featureCard glass">
-                    <div class="iconCircle">â¡</div>
-                    <h3>Super Fast</h3>
-                    <p>Luarmor is extremely fast and stable because of its multi-server structure and optimized design
-                        that ensures 0% error rate during authentication.</p>
-                </div>
-                <div class="featureCard glass">
-                    <div class="iconCircle">ð§</div>
-                    <h3>Easy to Integrate</h3>
-                    <p>All you have to do is to upload your script to dashboard and that's it. Luarmor will embed the
-                        whitelist inside your script and obfuscate it using Luraphâ¢ï¸</p>
-                </div>
-                <div class="featureCard glass">
-                    <div class="iconCircle">ð</div>
-                    <h3>Top Security</h3>
-                    <p>Luarmor utilizes commercial methods to keep your script secure. We write the code that re-writes
-                        your code in a secure way.</p>
-                </div>
-                <div class="featureCard glass">
-                    <div class="iconCircle">ð</div>
-                    <h3>Reliable</h3>
-                    <p>Our systems operate with 99.9%+ uptime, including script stability. With Luarmor, your users will
-                        never have whitelist related errors.</p>
-                </div>
-            </div>
-        </div>
+    
+    <div id="file_upload_layout" class="collapse show">
+      <div class="mb-2">
+        <label for="file_upload" class="form-label">Upload File</label>
+        <input class="form-control" type="file" id="file_upload" name="u">
+      </div>
+      <div class="text-sm-start mb-3">
+        <small id="file_stats">0 bytes</small>
+      </div>
     </div>
-    <div class="servicesSection">
-        <div class="servicesContainer">
-            <div class="servicesHeader">
-                <h2 class="servicesTitle">
-                    Powerful <span class="gradient-text">Features</span>
-                    You'll Love
-                </h2>
-                <p class="heroDescription">
-                    Everything you need to manage your scripts and users automatically.
-                </p>
-            </div>
-            <div class="serviceCards">
-                <div class="featureCard glass"
-                    onclick="window.open('https://docs.luarmor.net/luarmor-user-manual-and-f.a.q#discord-bot-configuration', '_blank')">
-                    <div class="cardGif">
-                        <img src="./newlanding/discordbotgif.gif" alt="Discord Bot Demo">
-                    </div>
-                    <div class="cardContent">
-                        <div class="cardHeader">
-                            <div class="iconCircle">ð¤</div>
-                            <h3>Discord Bot</h3>
-                        </div>
-                        <p>Luarmor comes with a ready-to-use discord bot with a mini control panel for your users where
-                            they can redeem keys, reset HWID and more. Click to read more.</p>
-                    </div>
-                </div>
-
-                <div class="featureCard glass"
-                    onclick="window.open('https://docs.luarmor.net/luarmor-user-manual-and-f.a.q#id-3-whitelist-users', '_blank')">
-                    <div class="cardGif">
-                        <img src="./newlanding/gen.gif" alt="Key Stocking Demo">
-                    </div>
-                    <div class="cardContent">
-                        <div class="cardHeader">
-                            <div class="iconCircle">ð</div>
-                            <h3>Key Stocking</h3>
-                        </div>
-                        <p>You can mass generate day-locked or lifetime keys & export them to list them on your sellix /
-                            shoppy or whatever platform you are using.</p>
-                    </div>
-                </div>
-
-                <div class="featureCard glass"
-                    onclick="window.open('https://docs.luarmor.net/luarmor-user-manual-and-f.a.q#runtime-variables', '_blank')">
-                    <div class="cardGif">
-                        <img src="./newlanding/runtimevar.png" alt="Runtime Vars Demo">
-                    </div>
-                    <div class="cardContent">
-                        <div class="cardHeader">
-                            <div class="iconCircle">ð</div>
-                            <h3>Runtime Variables</h3>
-                        </div>
-                        <p>Runtime variables allow you to access key-specific data such as discord id, note, expiry date
-                            and more. Allowing you to add custom logic for specific users.</p>
-                    </div>
-                </div>
-
-                <div class="featureCard glass">
-                    <div class="cardGif">
-                        <img src="./newlanding/killswitch.gif" alt="Killswitch Demo">
-                    </div>
-                    <div class="cardContent">
-                        <div class="cardHeader">
-                            <div class="iconCircle">ð</div>
-                            <h3>One Click Kill Switch</h3>
-                        </div>
-                        <p>You can disable, delete, update your scripts anytime you want, and it will immediately take
-                            effect for future executions.</p>
-                    </div>
-                </div>
-
-                <div class="featureCard glass"
-                    onclick="window.open('https://docs.luarmor.net/source-locker', '_blank')">
-                    <div class="cardGif">
-                        <img src="./newlanding/locker.gif" alt="Encrypted Backups Demo">
-                    </div>
-                    <div class="cardContent">
-                        <div class="cardHeader">
-                            <div class="iconCircle">ð</div>
-                            <h3>Encrypted Backups</h3>
-                        </div>
-                        <p>Luarmor gives you the option to encrypt & store your code just in case you ever lose access
-                            to source, or want to revert to an old version of your script. [read more].</p>
-                    </div>
-                </div>
-
-                <div class="featureCard glass"
-                    onclick="window.open('https://docs.luarmor.net/ad-system-rewards', '_blank')">
-                    <div class="cardGif">
-                        <img src="./newlanding/adsys.gif" alt="Ad System Demo">
-                    </div>
-                    <div class="cardContent">
-                        <div class="cardHeader">
-                            <div class="iconCircle">ðµ</div>
-                            <h3>Ad Key System</h3>
-                        </div>
-                        <p>Luarmor has a built-in, compatible and customizable ad link system with an effective
-                            anti-bypass, protecting your revenue and making everything easier.</p>
-                    </div>
-                </div>
-
-                <div class="featureCard glass"
-                    onclick="window.open('https://docs.luarmor.net/luarmor-user-manual-and-f.a.q#key-check-library', '_blank')">
-                    <div class="cardGif">
-                        <img src="./newlanding/keyapi.png" alt="Key Check API Demo">
-                    </div>
-                    <div class="cardContent">
-                        <div class="cardHeader">
-                            <div class="iconCircle">ðï¸</div>
-                            <h3>Key Check API</h3>
-                        </div>
-                        <p>We have a Lua API that allows you to check key details before actually running the obfuscated
-                            script, allowing you to implement custom logic without kicking the user. Click to read more.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="featureCard glass"
-                    onclick="window.open('https://docs.luarmor.net/luarmor-user-manual-and-f.a.q#id-2-upload-your-script', '_blank')">
-                    <div class="cardGif">
-                        <img src="./newlanding/integration.png" alt="bb">
-                    </div>
-                    <div class="cardContent">
-                        <div class="cardHeader">
-                            <div class="iconCircle">ð¡ï¸</div>
-                            <h3>Automatic Integration</h3>
-                        </div>
-                        <p>When you upload your script on dashboard, it will have a whitelist automatically embedded
-                            inside it, and get obfuscated with the industry standard Luraph. Then you just run the
-                            loadstring and that's it.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    
+    <div id="text_input_layout" class="collapse">
+      <div class="mb-2">
+        <label for="text_input" class="form-label">Upload Text</label>
+        <textarea class="form-control" id="text_input" rows="10" name="u" disabled></textarea>
+      </div>
+      <div class="text-sm-start mb-3">
+        <small id="char_count">0 characters</small>
+      </div>
     </div>
-    <div class="statsSection">
-        <div class="container">
-            <div class="statsHeader">
-                <h2 class="heroTitle">Here are our stats</h2>
-                <p class="heroDescription">Actively used by thousands of people.</p>
-            </div>
-            <div class="statsGrid">
-                <div class="statCard glass">
-                    <h3>1.2M+</h3>
-                    <p>Active keys</p>
-                </div>
-                <div class="statCard glass">
-                    <h3>600M+</h3>
-                    <p>Executions every month</p>
-                </div>
-                <div class="statCard glass">
-                    <h3>$315K+</h3>
-                    <p>Generated in Ad Revenue!
-                        <small style="display: block; font-size: 0.75em; color: #666; margin-top: 5px;">
-                            * since November 2024.
-                        </small>
-                    <p>
-                </div>
-
-            </div>
-            <br> </br>
-            <small style="display: block; font-size: 0.9em; color: #464646; margin-top: 5px;">
-                * As of August 2025. Ad revenue is an estimate with <br />average monetization settings assumed for each
-                user.
-            </small>
-        </div>
+    
+    <div id="url_input_layout" class="collapse">
+      <div class="mb-2">
+        <label for="url_input" class="form-label">URL Address</label>
+        <input type="url" class="form-control" id="url_input" placeholder="https://example.com" name="u" disabled>
+      </div>
+      <div class="text-sm-start mb-3">
+        <small id="url_validate_result"></small>
+      </div>
     </div>
-    <div class="pricingSection" id="prices">
-        <div class="container">
-            <div class="pricingHeader">
-                <h2 class="heroTitle">Simple and Flat Pricing</h2>
-                <p class="heroDescription">Choose the plan that's right for you.</p>
-            </div>
-            <div class="pricingGrid">
-                <div class="priceCard glass">
-                    <h3>Basic</h3>
-                    <p class="priceSubtitle">If you just started developing scripts, this plan is ideal for you. You can
-                        always switch to a higher plan anytime you want!</p>
-                    <div class="priceAmount">
-                        <span class="price">$15</span>
-                        <span class="period">/month</span>
-                    </div>
-                    <ul class="priceFeatures">
-                        <li class="included">â API & Bot access</li>
-                        <li class="included">â Webhook logs</li>
-                        <li class="included">â Up to 200 keys at once</li>
-                        <li class="included">â Unlimited obf per month</li>
-                        <li class="included">â Up to 2 scripts at once</li>
-                        <li class="included">â 1 project folder</li>
-                        <li class="included">â Ad system (rewards)</li>
-                        <li class="excluded">Ã Keyless (FFA) mode</li>
-                    </ul>
-                    <button class="priceButton" onclick="openPaymentModal()">Buy Invite</button>
-                </div>
-
-                <div class="priceCard glass">
-                    <h3>Premium</h3>
-                    <p class="priceSubtitle">Best plan for most users. If your script hub growing fast, this plan is
-                        recommended.</p>
-                    <div class="priceAmount">
-                        <span class="price">$25</span>
-                        <span class="period">/month</span>
-                    </div>
-                    <ul class="priceFeatures">
-                        <div class="popularBadge">Most Popular</div>
-                        <li class="included">â API & Bot access</li>
-                        <li class="included">â Webhook logs</li>
-                        <li class="included">â Up to <b style="color:rgba(226, 226, 226, 0.958)">1,000</b> keys at once
-                        </li>
-                        <li class="included">â Unlimited obf per month</li>
-                        <li class="included">â Up to 8 scripts at once</li>
-                        <li class="included">â 3 project folders</li>
-                        <li class="included">â Ad system (rewards)</li>
-                        <li class="included">â Keyless (FFA) mode</li>
-                    </ul>
-                    <button class="priceButton popular" onclick="openPaymentModal()">Buy Invite</button>
-                </div>
-
-                <div class="priceCard glass popular">
-                    <h3>Pro</h3>
-                    <p class="priceSubtitle">Everything in premium with higher usage limits. Recommended for high
-                        quality scripts with hundreds of buyers.</p>
-                    <div class="priceAmount">
-                        <span class="price">$40</span>
-                        <span class="period">/month</span>
-                    </div>
-                    <ul class="priceFeatures">
-                        <li class="included">â API & Bot access</li>
-                        <li class="included">â Webhook logs</li>
-                        <li class="included">â Up to <b style="color:rgb(224, 138, 255)">10,000</b> keys at once</li>
-                        <li class="included">â <b style="color:rgb(224, 138, 255)">Unlimited</b> obf per month</li>
-                        <li class="included">â Up to <b style="color:rgb(224, 138, 255)">18</b> scripts at once</li>
-                        <li class="included">â 6 project folders</li>
-                        <li class="included">â Ad system (rewards)</li>
-                        <li class="included">â Keyless (FFA) mode</li>
-                    </ul>
-                    <button class="priceButton" onclick="openPaymentModal()">Buy Invite</button>
-                </div>
-
-                <div class="priceCard glass">
-                    <h3>Enterprise</h3>
-                    <p class="priceSubtitle">For large hubs with specialized needs. Enterprise users can request custom
-                        features.</p>
-                    <div class="priceAmount">
-                        <span class="price"></span>
-                        <span class="period">Crypto Currencies only</span>
-                    </div>
-                    <ul class="priceFeatures">
-                        <li class="included">ð API ratelimit bypass</li>
-                        <li class="included">ð Advanced access control methods
-                            <small style="display: block; font-size: 0.9em; color: #666; margin-top: 5px;">
-                                * e.g max instance limit per key, execution cap, hwid-less (only key) execution, clonned
-                                emulator blocking / allowing etc.
-                            </small>
-                        </li>
-                        <li class="included">ð Custom URLs in ad system
-                            <small style="display: block; font-size: 0.9em; color: #666; margin-top: 5px;">
-                                * e.g ads.luarmor.net/godhub
-                            </small>
-                        </li>
-
-                        <li class="included">â 50k keys & 60 scripts</li>
-                        <li class="included">â 10 projects & unlimited obf.</li>
-                        <li class="included">+ Everything in Pro</li>
-                    </ul>
-                    <button class="priceButton" onclick="window.open('https://discord.gg/luarmor', '_blank')">Contact
-                        Us</button>
-                </div>
-            </div>
-        </div>
+    
+    <div class="mb-3">
+      <label for="paste_title" class="form-label">Title</label>
+      <input type="text" class="form-control" id="paste_title" placeholder="" name="title">
     </div>
-    <footer class="footer">
-        <div class="footerContainer">
-            <div class="footerTop">
-                <div class="footerLogo">
-                    <img src="./newlanding/logo.png" alt="Luarmor Logo" height="32">
-                    <span class="luarmorText gradient-text gradient-gold">Luarmor</span>
-                </div>
-                <div class="footerLinks">
-                    <div class="linkColumn">
-                        <h4>Product</h4>
-                        <ul>
-                            <li><a href="https://luarmor.net/faq">FAQ</a></li>
-                            <li><a href="https://docs.luarmor.net/">API Documentation</a></li>
-                            <li><a href="https://discord.gg/luarmor">Discord</a></li>
-                        </ul>
-                    </div>
-                    <div class="linkColumn">
-                        <h4>Stuff</h4>
-                        <ul>
-                            <li><a href="https://luarmor.net/tos">Terms of Service</a></li>
-                            <li><a href="https://luarmor.net/tos">Privacy Policy</a></li>
-                            <li><a href="https://discord.gg/luarmor">Contact</a></li>
-                            <li><a href="https://luarmor.net/submit_request">Submit a Request / Suggestion</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="footerBottom">
-                <p>Landing page designed by the best front end designer Riley (real AF)</p>
-            </div>
-        </div>
-    </footer>
-    <!-- Overlay -->
-    <div id="payment-modal-overlay" class="modal-overlay">
-        <!-- Modal Dialog -->
-        <div class="modal-dialog">
-            <button class="modal-close" onclick="closePaymentModal()">Ã</button>
-            <h2>Select Payment Method</h2>
-            <p>* You will receive an invite code that can be used to SIGN UP and have 30 days of access, or EXTEND an existing account for +30 days.<br></br>* Multiple invite codes of the same plan can be redeemed at once to stack days. <br></br>* Invite codes do not have expiry dates, they can be redeemed anytime.<br></br>* You can only upgrade/downgrade plans in the last 7 days of your current plan. You do so by redeeming the invite code of the new plan. You will have +30 days and your plan will be immediately changed.</p>
-
-            <div class="payment-options">
-                <button class="payment-button crypto" onclick="redirectToCrypto()">Crypto (Official Store)</button>
-                <button class="payment-button card" onclick="redirectToCard()">ð³ Debit/Credit Card / ApplePay / GPay (Reseller)</button>
-		 <button class="payment-button card" onclick="redirectToPaypal()">PayPal (Reseller)</button>           
-	<button class="payment-button card" onclick="redirectToRus()">[RU] FunPay (Reseller)</button> 
-</div>
-        </div>
+    
+    <div class="card-header mb-3">
+      <span data-bs-toggle="collapse" data-bs-target="#advanced_settings_layout" aria-expanded="false"
+            aria-controls="advanced_settings_layout" id="advanced_settings_control"
+            class="d-block collapsed">
+        <i class="fa fa-chevron-down pull-right mt-1"></i>
+        Advanced Settings
+      </span>
     </div>
+    
+    <div id="advanced_settings_layout" class="collapse">
+      <div class="mb-3">
+        <label class="form-label" for="pass_input">Password</label>
+        <div class="input-group mb-3">
+          <input class="form-control password lock" id="pass_input" type="password" name="auth-key"/>
+          <span class="input-group-text" style="cursor: pointer" id="show_pass_button">
+            <i class="bi bi-eye-slash" id="show_pass_icon"></i>
+          </span>
+        </div>
+      </div>
+      
+      <div class="mb-3">
+        <label for="read_limit_input" class="form-label">Max Access Times</label>
+        <input type="number" class="form-control" id="read_limit_input" min="1" name="read-limit">
+      </div>
 
-    <script>
-        function openPaymentModal() {
-            document.getElementById('payment-modal-overlay').style.display = 'flex';
-        }
+      <div class="mb-3 dev-mode d-none">
+        <label for="expiration_date_input" class="form-label">Expiration Date</label>
+        <input class="form-control" type="text" id="expiration_date_input" name="expiration_date">
+      </div>
 
-        function closePaymentModal() {
-            document.getElementById('payment-modal-overlay').style.display = 'none';
-        }
-
-        function redirectToCrypto() {
-            window.open('https://luarmor.net/crypto', '_blank');
-        }
-        function redirectToCard() {
-window.open('https://angxlzz.store/product/luarmor/', '_blank');
-//            window.open('https://angxlzzstore.sellhub.cx/product/luarmor/', '_blank');
-        }
-	function redirectToPaypal() {
-		window.open('https://zephyrion.sell.app/', '_blank');
-	}
-
-	function redirectToRus() {
-		window.open('https://funpay.com/en/users/7412687/', '_blank');
-	}	
-
-   function toggleMobileMenu() {
-    var mobileMenu = document.querySelector('.mobile-menu');
-    mobileMenu.classList.toggle('open');
-  }
+      <div class="mb-3 dev-mode d-none" id="location_input_div">
+        <label for="location_input" class="form-label">Location</label>
+          <select class="form-select" id="location_input" name="location">
+            <option selected></option>
+            <option value="default">default</option>
+            <option value="large">large</option>
+            <option value="raspberry">raspberry [campaus only]</option>
+          </select>
+      </div>
+      
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="show_qrcode_checkbox" checked value="1">
+        <label class="form-check-label" for="show_qrcode_checkbox">
+          Show QR code
+        </label>
+      </div>
+    </div>
+    
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" value="" id="tos_btn" required>
+      <label class="form-check-label" for="tos_btn">
+        I understand <a data-bs-toggle="modal" data-bs-target="#tos_modal" role="button"><u>
+        the terms of service</u></a>
+      </label>
+    </div>
+    
+    <div class="mb-3 text-end">
+      <button type="button" class="btn btn-secondary me-2" id="show_saved_button" disabled>Saved Paste</button>
+      <button type="button" class="btn btn-primary" id="upload_button">Upload</button>
+    </div>
   
-  // Attach click listener to the hamburger button
-  document.querySelector('.menu-toggle').addEventListener('click', toggleMobileMenu);
+  </form>
+</div>
 
-    </script>
-</body>
+<div class="modal fade" id="tos_modal" tabindex="-1" aria-labelledby="tos_modal_label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tos_modal_label">Terms of service</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <h3>Paste Service</h3>
+          <p>
+            <a href="https://pb.nekoid.cc">pb.nekoid.cc</a> is a pastebin-like service hosted on Cloudflare Worker.
+            This service is primarily designed for own usage and interest only.<br>
+            All data may be deleted or expired without any notification and guarantee. Please <b>DO NOT</b> abuse this
+            service.
+            The limit for file upload is <b>10 MB</b> and the paste will be kept for <b>7 days</b> by default.<br>
+            The source code is available in my GitHub repository <a
+              href="https://github.com/rikkaneko/paste">[here]</a>.<br>
+            This webpage is designed for upload files only.
+            For other operations like changing paste settings and deleting paste, please make use of the
+            <a href="https://github.com/rikkaneko/paste#api-specification">API call</a> with <a
+              href="https://wiki.archlinux.org/title/CURL">curl</a>.
+          </p>
+        </div>
+        <div>
+          <img src="https://files.nekoid.cc/pub/satanichia.png" class="rounded mx-auto d-block w-100" loading="lazy"
+               alt="There should be a Satanichia ~" data-bs-toggle="tooltip"
+               data-bs-placement="bottom" title="Satanichia is so cute >w<">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-</html>
+<div class="modal fade" id="paste_modal" tabindex="-1" aria-labelledby="paste_modal_label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="paste_modal_label">Paste</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-2 input-group justify-content-center flex-nowrap">
+          <span class="input-group-text" id="paste_uuid"></span>
+          <button class="btn btn-primary" type="button" id="id_copy_button"
+                  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click to copy">
+            <i class="bi bi-clipboard" id="id_copy_button_icon"></i>
+          </button>
+        </div>
+        <img src="" class="mb-3 rounded mx-auto d-block w-75" alt="" id="paste_qrcode" style="min-width: 240px; max-width: 280px">
+        <div class="mb-3 mx-auto">
+          <table class="table table-striped table-bordered align-middle caption-top mx-auto" style="min-width: 280px; max-width: 400px;">
+            <caption>Paste information</caption>
+            <tbody id="paste_info_table">
+            <tr>
+              <td class="text-center col-3 text-nowrap">Paste ID</td>
+              <td class="text-center col-6" id="paste_info_uuid">-</td>
+            </tr>
+            <tr>
+              <td class="text-center col-3 text-nowrap">Title</td>
+              <td class="text-center col-6 scroll-inv" id="paste_info_title">-</td>
+            </tr>
+            <tr>
+              <td class="text-center col-3 text-nowrap">Type</td>
+              <td class="text-center col-6" id="paste_info_type">-</td>
+            </tr>
+            <tr>
+              <td class="text-center col-3 text-nowrap">Size</td>
+              <td class="text-center col-6" id="paste_info_human_readable_size">-</td>
+            </tr>
+            <tr>
+              <td class="text-center col-3 text-nowrap">Password</td>
+              <td class="text-center col-6" id="paste_info_has_password">-</td>
+            </tr>
+            <tr>
+              <td class="text-center col-3 text-nowrap">Access Times</td>
+              <td class="text-center col-6"><span id="paste_info_access_n">-</span><span id="paste_info_access_separator"> / </span><span id="paste_info_max_access_n"></span></td>
+            </tr>
+            <tr id="paste_info_location_row" class="dev-mode d-none">
+              <td class="text-center col-3 text-nowrap">Location</td>
+              <td class="text-center col-6"><span id="paste_info_location">-</span></td>
+            </tr>
+            <tr>
+              <td class="text-center col-3 text-nowrap">Created</td>
+              <td class="text-center col-6 scroll-inv" id="paste_info_created_at">-</td>
+            </tr>
+            <tr>
+              <td class="text-center col-3 text-nowrap">Expired</td>
+              <td class="text-center col-6 scroll-inv" id="paste_info_expired_at">-</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary me-2" id="forget_btn"
+                data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click to forget">
+          Forget
+        </button>
+        <button type="button" class="btn btn-success me-2" id="modal_go_btn">Go</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer mt-auto py-2 bg-dark">
+  <div class="d-flex justify-content-between mx-3">
+    <span class="text-light">&copy; 2022-2025 Joe Ma &lt;<a href="mailto:rikkaneko23@gmail.com">rikkaneko23@gmail.com</a>&gt;</span>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js" integrity="sha512-TPh2Oxlg1zp+kz3nFA0C5vVC6leG/6mm1z9+mA81MI5eaUVqasPLO8Cuk4gMF4gUfP5etR73rgU/8PNMsSesoQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.min.js" integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" integrity="sha512-a+SUDuwNzXDvz4XrIcXHuCf089/iJAoN4lmrXJg18XnduKK6YlDHNRalv4yd1N40OKI80tFidF+rqTFKGPoWFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gijgo/1.9.14/combined/js/gijgo.min.js" integrity="sha512-JsHMa3rSDTAy7MZCj1DWbL0YwAAysj23aWwCOTWKs3tlqO3ptwDhw3OHimYoeqryhTmSLFRn29C8qHK/oT/iZA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="static/paste.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e3e03c35ab8e51b',t:'MTc3NDc3ODI5MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
