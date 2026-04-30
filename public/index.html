@@ -29,14 +29,13 @@
             border-right: 1px solid var(--border);
             position: fixed;
             box-sizing: border-box;
-            overflow-y: auto;
         }
 
-        .sidebar h3 { font-size: 12px; color: var(--primary); margin-top: 0; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+        .sidebar h3 { font-size: 11px; color: var(--primary); margin-top: 0; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
 
-        .setting-group { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #21262d; }
+        .setting-group { margin-bottom: 22px; padding-bottom: 10px; border-bottom: 1px solid #21262d; }
         
-        .sidebar label { font-weight: bold; font-size: 11px; display: block; margin-bottom: 8px; color: #8b949e; }
+        .sidebar label { font-weight: bold; font-size: 10px; display: block; margin-bottom: 8px; color: #8b949e; }
 
         .sidebar input[type="number"] {
             width: 100%;
@@ -47,19 +46,19 @@
             border-radius: 5px;
         }
 
-        /* Toggle Switches */
+        /* Modern Toggle Switches */
         .switch-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .switch {
             position: relative;
             display: inline-block;
-            width: 34px;
-            height: 18px;
+            width: 36px;
+            height: 20px;
         }
 
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -76,7 +75,7 @@
         .slider:before {
             position: absolute;
             content: "";
-            height: 12px; width: 12px;
+            height: 14px; width: 14px;
             left: 3px; bottom: 3px;
             background-color: white;
             transition: .4s;
@@ -102,10 +101,9 @@
             padding: 15px;
             font-family: 'Courier New', monospace;
             margin-bottom: 20px;
-            resize: vertical;
         }
 
-        .input-area { height: 280px; }
+        .input-area { height: 300px; }
 
         .gen-btn {
             width: 100%;
@@ -133,7 +131,7 @@
             border: 1px solid var(--border);
         }
 
-        .output-area { height: 180px; font-size: 11px; color: #c9d1d9; }
+        .output-area { height: 180px; font-size: 11px; color: #c9d1d9; background: #000; }
 
         .copy-btn {
             width: 100%;
@@ -143,7 +141,6 @@
             padding: 10px;
             border-radius: 6px;
             cursor: pointer;
-            font-weight: 600;
         }
 
         .copy-btn.success { background: var(--success); color: white; border-color: var(--success); }
@@ -152,17 +149,17 @@
 <body>
 
 <div class="sidebar">
-    <h3>GENERATOR</h3>
+    <h3>CONTROL PANEL</h3>
     
     <div class="setting-group">
-        <label>FILE COUNT:</label>
+        <label>FILES TO GENERATE:</label>
         <input type="number" id="fileCount" value="3" min="1" max="30">
     </div>
 
     <div class="setting-group">
         <label>ANIMATION:</label>
         <div class="switch-container">
-            <span style="font-size: 12px;">Intro Script</span>
+            <span style="font-size: 11px;">Intro UI</span>
             <label class="switch">
                 <input type="checkbox" id="animToggle">
                 <span class="slider"></span>
@@ -173,20 +170,20 @@
     <div class="setting-group">
         <label>PRINTS:</label>
         <div class="switch-container">
-            <span style="font-size: 12px;">Enabled</span>
+            <span style="font-size: 11px;">Enabled</span>
             <label class="switch">
                 <input type="checkbox" id="printToggle" checked>
                 <span class="slider"></span>
             </label>
         </div>
-        <label>TEXTBOX:</label>
+        <label>PRINT AMOUNT:</label>
         <input type="number" id="printAmount" value="5" min="1" max="100">
     </div>
 
     <div class="setting-group">
         <label>FONT RANDOMISER:</label>
         <div class="switch-container">
-            <span style="font-size: 12px;">Unique Fonts</span>
+            <span style="font-size: 11px;">Random Per Line</span>
             <label class="switch">
                 <input type="checkbox" id="fontToggle">
                 <span class="slider"></span>
@@ -198,17 +195,17 @@
 <div class="main-content">
     <div class="container">
         <h1 style="margin-top: 0;">Limited Ext Generator</h1>
-        <textarea id="scriptInput" class="input-area" placeholder="Paste source here..."></textarea>
+        <textarea id="scriptInput" class="input-area" placeholder="Paste source code here..."></textarea>
         
-        <button class="gen-btn" onclick="generateOutputs()">Generate Varied Files</button>
+        <button class="gen-btn" onclick="generateOutputs()">CONFIRM & GENERATE</button>
 
         <div id="outputsWrapper" class="outputs-grid"></div>
     </div>
 </div>
 
 <script>
-    const randomNames = ["Vortex", "Nebula Hub", "FrostWare", "Aether X", "ShadowLvl", "Zenith V4", "Titanium", "Phantom Script", "Arctic", "Elysium", "Void-X", "SlayerHub"];
-    const robloxFonts = ["Enum.Font.GothamBold", "Enum.Font.GothamMedium", "Enum.Font.Arcade", "Enum.Font.Fantasy", "Enum.Font.SciFi", "Enum.Font.Code", "Enum.Font.Highway", "Enum.Font.Bangers", "Enum.Font.Creepster", "Enum.Font.LuckiestGuy"];
+    const randomNames = ["Vortex-X", "Nova Hub", "Shadow-Ware", "Aether V2", "Zenith", "Titanium", "Phantom", "Arctic Hub", "Elysium", "Void Script"];
+    const robloxFonts = ["Enum.Font.GothamBold", "Enum.Font.GothamMedium", "Enum.Font.Arcade", "Enum.Font.Fantasy", "Enum.Font.SciFi", "Enum.Font.Code", "Enum.Font.Bangers", "Enum.Font.LuckiestGuy"];
 
     function processCode(source) {
         let lines = source.split('\n');
@@ -225,19 +222,16 @@
                 return `Color3.fromRGB(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`;
             });
 
-            // 2. Strict Title/Text Protection
-            // We check the variable name (e.g., DesyncBtn.Text). If 'Btn' is in the prefix, we skip.
-            const textMatch = newLine.match(/([a-zA-Z0-9_]+)\.Text\s*=\s*"([^"]+)"/);
-            if (textMatch) {
-                const varName = textMatch[1].toLowerCase();
-                const isButton = varName.includes('btn') || varName.includes('button') || varName.includes('click');
-                
-                if (!isButton) {
-                    newLine = newLine.replace(/"([^"]+)"/, `"${randomNames[Math.floor(Math.random() * randomNames.length)]}"`);
-                }
+            // 2. ULTRA-STRICT Text Randomizer
+            // Only renames if the line contains "Title" or "Name" AND does NOT contain "Button", "Btn", "Click", or "Toggle"
+            const isButtonLine = /button|btn|click|toggle|mouse/i.test(newLine);
+            const isTitleLine = /title|name|header/i.test(newLine);
+
+            if (newLine.includes(".Text") && isTitleLine && !isButtonLine) {
+                newLine = newLine.replace(/"([^"]+)"/, `"${randomNames[Math.floor(Math.random() * randomNames.length)]}"`);
             }
 
-            // 3. Font Randomizer - Picks a new font for every single line it finds
+            // 3. Font Randomizer - Unique per line
             if (useFont && newLine.includes(".Font")) {
                 newLine = newLine.replace(/Enum\.Font\.[a-zA-Z]+/g, () => {
                     return robloxFonts[Math.floor(Math.random() * robloxFonts.length)];
@@ -249,12 +243,12 @@
 
         let finalCode = processedLines.join('\n');
 
-        // 4. Animation Inject
+        // 4. Animation Snippet
         if (useAnim) {
-            finalCode = `-- Animation Intro\ntask.spawn(function() print("Animation Script Running...") end)\n` + finalCode;
+            finalCode = `-- [ANIMATION LOADED]\ntask.spawn(function() print("UI Animation Started") end)\n` + finalCode;
         }
 
-        // 5. Print Inject
+        // 5. Print Loop
         if (usePrint) {
             finalCode = `for i = 1, ${printCount} do print("LEAKED BY FPSL https://discord.gg/VuHrBW5q") end\n` + finalCode;
         }
@@ -266,7 +260,7 @@
         const source = document.getElementById('scriptInput').value;
         const count = document.getElementById('fileCount').value;
         const wrapper = document.getElementById('outputsWrapper');
-        if (!source.trim()) return alert("Please paste code!");
+        if (!source.trim()) return alert("Paste your code first!");
 
         wrapper.innerHTML = "";
         for (let i = 1; i <= count; i++) {
