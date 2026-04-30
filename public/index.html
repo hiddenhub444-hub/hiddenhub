@@ -16,7 +16,7 @@
         }
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 1000px;
             background: #161b22;
             padding: 30px;
             border-radius: 12px;
@@ -35,14 +35,15 @@
             padding: 12px;
             font-family: 'Courier New', Courier, monospace;
             resize: vertical;
+            box-sizing: border-box;
         }
-        .input-area { height: 200px; margin-bottom: 20px; }
+        .input-area { height: 180px; margin-bottom: 20px; }
         
         .controls {
             text-align: center;
             margin-bottom: 30px;
         }
-        button {
+        .gen-btn {
             background-color: #238636;
             color: white;
             border: none;
@@ -53,13 +54,12 @@
             font-size: 18px;
             transition: transform 0.2s, background 0.2s;
         }
-        button:hover { background-color: #2ea043; transform: scale(1.02); }
-        button:active { transform: scale(0.98); }
+        .gen-btn:hover { background-color: #2ea043; transform: scale(1.02); }
 
         .outputs-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
+            gap: 20px;
         }
         .output-card {
             display: flex;
@@ -71,43 +71,65 @@
             color: #58a6ff;
             font-weight: bold;
         }
-        .output-area { height: 250px; font-size: 12px; }
+        .output-area { height: 250px; font-size: 12px; margin-bottom: 10px; }
+
+        .copy-btn {
+            background-color: #30363d;
+            color: #c9d1d9;
+            border: 1px solid #8b949e;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover { background-color: #444c56; border-color: #c9d1d9; }
+        .copy-btn.success { background-color: #238636; border-color: #238636; color: white; }
+
+        @media (max-width: 768px) {
+            .outputs-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>Limited Ext Generator</h1>
-    <p class="subtitle">Paste your source code to generate 3 randomized variations</p>
+    <p class="subtitle">Paste source, randomize themes, and copy your favorites</p>
     
     <textarea id="scriptInput" class="input-area" placeholder="Paste Roblox Script Source Here..."></textarea>
     
     <div class="controls">
-        <button onclick="generateOutputs()">Confirm & Generate Trio</button>
+        <button class="gen-btn" onclick="generateOutputs()">Confirm & Generate Trio</button>
     </div>
 
     <div class="outputs-grid">
+        <!-- Variation 1 -->
         <div class="output-card">
             <label>Variation A</label>
             <textarea id="out1" class="output-area" readonly placeholder="Waiting..."></textarea>
+            <button class="copy-btn" onclick="copyToClipboard('out1', this)">Copy Variation A</button>
         </div>
+        <!-- Variation 2 -->
         <div class="output-card">
             <label>Variation B</label>
             <textarea id="out2" class="output-area" readonly placeholder="Waiting..."></textarea>
+            <button class="copy-btn" onclick="copyToClipboard('out2', this)">Copy Variation B</button>
         </div>
+        <!-- Variation 3 -->
         <div class="output-card">
             <label>Variation C</label>
             <textarea id="out3" class="output-area" readonly placeholder="Waiting..."></textarea>
+            <button class="copy-btn" onclick="copyToClipboard('out3', this)">Copy Variation C</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Expanded list of random names
     const randomNames = [
         "Nebula-X", "CrimsonV2", "Hyperion", "FrostByte", "ShadowStep", 
         "Enigma", "ZenithHub", "Exodus", "Titanium", "Velocity", 
-        "Obsidian", "Phantom", "Atlas", "Omega", "Viper"
+        "Obsidian", "Phantom", "Atlas", "Omega", "Viper", "Ethereal", "Void", "Specter"
     ];
 
     function getRandomColor() {
@@ -119,7 +141,6 @@
 
     function processCode(source) {
         let newCode = source;
-
         // Randomize Colors
         const colorRegex = /Color3\.(fromRGB|new)\(([^)]+)\)/g;
         newCode = newCode.replace(colorRegex, () => getRandomColor());
@@ -130,22 +151,34 @@
             const newName = randomNames[Math.floor(Math.random() * randomNames.length)];
             return `${property} = "${newName}"`;
         });
-
         return newCode;
     }
 
     function generateOutputs() {
         const source = document.getElementById('scriptInput').value;
-        
         if (!source.trim()) {
-            alert("The input is empty! Paste your script first.");
+            alert("Paste your script first!");
             return;
         }
-
-        // Generate 3 unique versions
         document.getElementById('out1').value = processCode(source);
         document.getElementById('out2').value = processCode(source);
         document.getElementById('out3').value = processCode(source);
+    }
+
+    function copyToClipboard(id, btn) {
+        const text = document.getElementById(id).value;
+        if (!text) return;
+
+        navigator.clipboard.writeText(text).then(() => {
+            const originalText = btn.innerText;
+            btn.innerText = "Copied!";
+            btn.classList.add('success');
+            
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.classList.remove('success');
+            }, 1500);
+        });
     }
 </script>
 
