@@ -1,4 +1,4 @@
-=<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -190,7 +190,7 @@
     <div class="setting-group">
         <label>FONT RANDOMISER:</label>
         <div class="switch-container">
-            <span>Random Fonts</span>
+            <span>Per-Line Random</span>
             <label class="switch">
                 <input type="checkbox" id="fontToggle">
                 <span class="slider"></span>
@@ -202,7 +202,7 @@
 <div class="main-content">
     <div class="container">
         <h1>Limited Ext Generator</h1>
-        <textarea id="scriptInput" class="input-area" placeholder="Paste Roblox source here..."></textarea>
+        <textarea id="scriptInput" class="input-area" placeholder="Paste source here..."></textarea>
         
         <button class="gen-btn" onclick="generateOutputs()">Confirm & Generate</button>
 
@@ -211,8 +211,8 @@
 </div>
 
 <script>
-    const randomNames = ["Vortex", "Nebula Hub", "FrostWare", "Aether X", "ShadowLvl", "Zenith V4", "Titanium", "Phantom Script"];
-    const robloxFonts = ["Enum.Font.GothamBold", "Enum.Font.GothamMedium", "Enum.Font.Arcade", "Enum.Font.Fantasy", "Enum.Font.SciFi", "Enum.Font.Code", "Enum.Font.Highway", "Enum.Font.Bangers"];
+    const randomNames = ["Vortex", "Nebula Hub", "FrostWare", "Aether X", "ShadowLvl", "Zenith V4", "Titanium", "Phantom Script", "Arctic", "Elysium", "Void-X", "SlayerHub"];
+    const robloxFonts = ["Enum.Font.GothamBold", "Enum.Font.GothamMedium", "Enum.Font.Arcade", "Enum.Font.Fantasy", "Enum.Font.SciFi", "Enum.Font.Code", "Enum.Font.Highway", "Enum.Font.Bangers", "Enum.Font.Creepster", "Enum.Font.LuckiestGuy"];
 
     function processCode(source) {
         let code = source;
@@ -225,22 +225,27 @@
             return `Color3.fromRGB(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`;
         });
 
-        // 2. Randomize Titles ONLY (Ignores buttons by checking if the line contains 'Button')
         const lines = code.split('\n');
         for (let i = 0; i < lines.length; i++) {
-            // Only replace .Text if the line doesn't mention "Button" or "Click"
-            if (lines[i].includes(".Text") && !lines[i].toLowerCase().includes("button") && !lines[i].toLowerCase().includes("click")) {
-                lines[i] = lines[i].replace(/"([^"]+)"/, () => {
+            let line = lines[i];
+
+            // 2. Randomize Titles (Strictly exclude lines mentioning buttons)
+            const isButtonLine = /button|click|btn|toggle/i.test(line);
+            
+            if (line.includes(".Text") && !isButtonLine) {
+                line = line.replace(/"([^"]+)"/, () => {
                     return `"${randomNames[Math.floor(Math.random() * randomNames.length)]}"`;
                 });
             }
             
-            // 3. Randomize Fonts (if enabled)
-            if (useFont && lines[i].includes(".Font")) {
-                lines[i] = lines[i].replace(/Enum\.Font\.[a-zA-Z]+/, () => {
+            // 3. Randomize Fonts (Every single font property gets a new random choice)
+            if (useFont && line.includes(".Font")) {
+                line = line.replace(/Enum\.Font\.[a-zA-Z]+/g, () => {
                     return robloxFonts[Math.floor(Math.random() * robloxFonts.length)];
                 });
             }
+            
+            lines[i] = line;
         }
         code = lines.join('\n');
 
