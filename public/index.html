@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Limited Ext Generator</title>
+    <title>Limited Ext Generator - Ice Hub Edition</title>
     <style>
         body {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             background-color: #0d1117;
             color: #c9d1d9;
             margin: 0;
@@ -15,29 +15,47 @@
             flex-direction: column;
             align-items: center;
         }
+        /* Sidebar Menu */
         .sidebar {
             position: fixed;
             top: 20px;
             left: 20px;
             background: #161b22;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 20px;
+            border-radius: 10px;
             border: 1px solid #30363d;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             z-index: 100;
+            width: 180px;
         }
-        .sidebar label { font-weight: bold; font-size: 12px; display: block; margin-bottom: 5px; color: #58a6ff; }
+        .sidebar label { 
+            font-weight: bold; 
+            font-size: 11px; 
+            display: block; 
+            margin-bottom: 8px; 
+            color: #58a6ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
         .sidebar input[type="number"] {
-            width: 60px;
+            width: 100%;
             background: #0d1117;
             border: 1px solid #30363d;
             color: white;
-            padding: 5px;
-            border-radius: 4px;
-            margin-bottom: 15px;
+            padding: 8px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
         }
-        .toggle-container { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .toggle-container input { cursor: pointer; }
-
+        .toggle-row { 
+            display: flex; 
+            justify-content: space-between;
+            align-items: center; 
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+        
+        /* Main UI */
         .container {
             width: 100%;
             max-width: 1100px;
@@ -45,13 +63,10 @@
             padding: 30px;
             border-radius: 12px;
             border: 1px solid #30363d;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            margin-top: 20px;
         }
-        h1 { color: #58a6ff; text-align: center; margin: 0; }
-        .subtitle { text-align: center; color: #8b949e; margin-bottom: 20px; font-size: 14px; }
-        
-        textarea {
+        h1 { color: #58a6ff; text-align: center; margin-top: 0; }
+        .input-area { 
+            height: 200px; 
             width: 100%;
             background: #0d1117;
             color: #7ee787;
@@ -59,41 +74,37 @@
             border-radius: 8px;
             padding: 12px;
             font-family: 'Courier New', monospace;
-            resize: vertical;
-            box-sizing: border-box;
+            margin-bottom: 20px;
         }
-        .input-area { height: 180px; margin-bottom: 20px; }
-        
-        .controls { text-align: center; margin-bottom: 30px; }
         .gen-btn {
+            display: block;
+            width: 100%;
             background-color: #238636;
             color: white;
             border: none;
-            padding: 15px 40px;
+            padding: 15px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
             font-size: 18px;
+            margin-bottom: 30px;
         }
         .gen-btn:hover { background-color: #2ea043; }
 
         .outputs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 20px;
-            width: 100%;
         }
         .output-card {
             background: #0d1117;
             padding: 15px;
             border-radius: 8px;
             border: 1px solid #30363d;
-            display: flex;
-            flex-direction: column;
         }
-        .output-card label { margin-bottom: 8px; color: #58a6ff; font-weight: bold; }
-        .output-area { height: 200px; font-size: 11px; margin-bottom: 10px; }
+        .output-area { height: 150px; font-size: 11px; width: 100%; margin-bottom: 10px; }
         .copy-btn {
+            width: 100%;
             background: #30363d;
             color: white;
             border: 1px solid #8b949e;
@@ -101,7 +112,7 @@
             border-radius: 6px;
             cursor: pointer;
         }
-        .copy-btn.success { background: #238636; }
+        .copy-btn.success { background: #238636; border-color: #238636; }
     </style>
 </head>
 <body>
@@ -111,185 +122,173 @@
     <input type="number" id="fileCount" value="3" min="3" max="30">
     
     <label>ANIMATION:</label>
-    <div class="toggle-container">
-        <span>NO</span>
+    <div class="toggle-row">
+        <span>OFF</span>
         <input type="checkbox" id="animToggle">
-        <span>YES</span>
+        <span>ON</span>
+    </div>
+
+    <label>ICE HUB MODE:</label>
+    <div class="toggle-row">
+        <span>OFF</span>
+        <input type="checkbox" id="iceHubToggle">
+        <span>ON</span>
     </div>
 </div>
 
 <div class="container">
     <h1>Limited Ext Generator</h1>
-    <p class="subtitle">Only modifies Titles and Colors. Buttons remain intact.</p>
-    
     <textarea id="scriptInput" class="input-area" placeholder="Paste Roblox Script Source Here..."></textarea>
-    
-    <div class="controls">
-        <button class="gen-btn" onclick="generateOutputs()">Confirm & Generate</button>
-    </div>
-
+    <button class="gen-btn" onclick="generateOutputs()">Confirm & Generate</button>
     <div id="outputsWrapper" class="outputs-grid"></div>
 </div>
 
 <script>
-    const randomNames = ["Nebula-X", "CrimsonV2", "Hyperion", "FrostByte", "ShadowStep", "Enigma", "ZenithHub", "Exodus", "Titanium", "Velocity", "Obsidian", "Phantom", "Atlas", "Omega", "Viper"];
+    const randomNames = ["Vortex", "Shadow", "Nebula", "Aether", "Frost", "Zenith", "Titan", "Phantom"];
 
+    // The Animation Script
     const animCode = `task.spawn(function()
-    local TweenService = game:GetService('TweenService')
-    local UserInputService = game:GetService('UserInputService')
-    local Players = game:GetService('Players')
-    local player = Players.LocalPlayer
-    local playerGui = player:WaitForChild('PlayerGui')
-    local screenGui = Instance.new('ScreenGui')
+    local TS = game:GetService('TweenService')
+    local UIS = game:GetService('UserInputService')
+    local SG = Instance.new('ScreenGui', game:GetService('Players').LocalPlayer:WaitForChild('PlayerGui'))
+    SG.Name = 'FPSL_Leak'
+    SG.IgnoreGuiInset = true
+    SG.DisplayOrder = 999999
 
-    screenGui.Name = 'FPSL_Leak'
-    screenGui.ResetOnSpawn = false
-    screenGui.IgnoreGuiInset = true
-    screenGui.DisplayOrder = 999999
-    screenGui.Parent = playerGui
-
-    local bg = Instance.new('Frame')
+    local bg = Instance.new('Frame', SG)
     bg.Size = UDim2.new(1, 0, 1, 0)
     bg.BackgroundColor3 = Color3.new(0, 0, 0)
-    bg.BorderSizePixel = 0
     bg.BackgroundTransparency = 1
-    bg.Parent = screenGui
 
-    local leakText = Instance.new('TextLabel')
-    leakText.Size = UDim2.new(1, 0, 0.4, 0)
-    leakText.Position = UDim2.new(0, 0, 0.3, 0)
-    leakText.BackgroundTransparency = 1
-    leakText.Text = 'Leaked by fpsl'
-    leakText.TextColor3 = Color3.new(1, 1, 1)
-    leakText.TextScaled = true
-    leakText.Font = Enum.Font.GothamBold
-    leakText.TextTransparency = 1
-    leakText.Parent = bg
+    local t1 = Instance.new('TextLabel', bg)
+    t1.Size = UDim2.new(1, 0, 0.4, 0)
+    t1.Position = UDim2.new(0, 0, 0.3, 0)
+    t1.BackgroundTransparency = 1
+    t1.Text = 'Leaked by fpsl'
+    t1.TextColor3 = Color3.new(1, 1, 1)
+    t1.TextScaled = true
+    t1.Font = Enum.Font.GothamBold
+    t1.TextTransparency = 1
 
-    local discordText = Instance.new('TextLabel')
-    discordText.Size = UDim2.new(1, 0, 0.4, 0)
-    discordText.Position = UDim2.new(0, 0, 0.3, 0)
-    discordText.BackgroundTransparency = 1
-    discordText.Text = 'discord.gg/freesources'
-    discordText.TextColor3 = Color3.new(1, 1, 1)
-    discordText.TextScaled = true
-    discordText.Font = Enum.Font.GothamBold
-    discordText.TextTransparency = 1
-    discordText.Parent = bg
+    local t2 = Instance.new('TextLabel', bg)
+    t2.Size = UDim2.new(1, 0, 0.4, 0)
+    t2.Position = UDim2.new(0, 0, 0.3, 0)
+    t2.BackgroundTransparency = 1
+    t2.Text = 'discord.gg/freesources'
+    t2.TextColor3 = Color3.new(1, 1, 1)
+    t2.TextScaled = true
+    t2.Font = Enum.Font.GothamBold
+    t2.TextTransparency = 1
 
-    local skipBtn = Instance.new('TextButton')
-    skipBtn.Size = UDim2.new(0.18, 0, 0.09, 0)
-    skipBtn.Position = UDim2.new(0.41, 0, 0.78, 0)
-    skipBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-    skipBtn.Text = 'Skip'
-    skipBtn.TextColor3 = Color3.new(1, 1, 1)
-    skipBtn.TextScaled = true
-    skipBtn.Font = Enum.Font.GothamSemibold
-    skipBtn.BorderSizePixel = 0
-    skipBtn.BackgroundTransparency = 1
-    skipBtn.Visible = false
-    skipBtn.Parent = bg
+    local btn = Instance.new('TextButton', bg)
+    btn.Size = UDim2.new(0.18, 0, 0.09, 0)
+    btn.Position = UDim2.new(0.41, 0, 0.78, 0)
+    btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    btn.Text = 'Skip'
+    btn.TextColor3 = Color3.new(1, 1, 1)
+    btn.TextScaled = true
+    btn.Visible = false
+    btn.BackgroundTransparency = 1
+    Instance.new('UICorner', btn).CornerRadius = UDim.new(0, 12)
 
-    local corner = Instance.new('UICorner')
-    corner.CornerRadius = UDim.new(0, 12)
-    corner.Parent = skipBtn
-
-    local fadeIn = TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    local fadeOut = TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
-
-    local function tween(obj, props, info)
-        TweenService:Create(obj, info, props):Play()
-    end
-
-    tween(bg, {BackgroundTransparency = 0}, fadeIn)
+    local info = TweenInfo.new(0.8)
+    TS:Create(bg, info, {BackgroundTransparency = 0}):Play()
     task.wait(0.4)
-    tween(leakText, {TextTransparency = 0}, fadeIn)
+    TS:Create(t1, info, {TextTransparency = 0}):Play()
     task.wait(1.5)
-    tween(leakText, {TextTransparency = 1}, fadeOut)
+    TS:Create(t1, info, {TextTransparency = 1}):Play()
     task.wait(0.6)
-    tween(discordText, {TextTransparency = 0}, fadeIn)
-    skipBtn.Visible = true
-    tween(skipBtn, {BackgroundTransparency = 0, TextTransparency = 0}, fadeIn)
+    TS:Create(t2, info, {TextTransparency = 0}):Play()
+    btn.Visible = true
+    TS:Create(btn, info, {BackgroundTransparency = 0, TextTransparency = 0}):Play()
 
-    local function skipLeak()
+    btn.MouseButton1Click:Connect(function()
         if setclipboard then setclipboard('discord.gg/freesources') end
-        skipBtn.Text = 'join for more.'
+        btn.Text = 'join for more.'
         task.wait(1.5)
-        tween(bg, {BackgroundTransparency = 1}, fadeOut)
-        tween(discordText, {TextTransparency = 1}, fadeOut)
-        tween(skipBtn, {BackgroundTransparency = 1, TextTransparency = 1}, fadeOut)
-        task.wait(1.1)
-        screenGui:Destroy()
-    end
-
-    skipBtn.MouseButton1Click:Connect(skipLeak)
+        SG:Destroy()
+    end)
 end)\n\n`;
 
-    const gradientLogic = `\ntask.spawn(function()
-    local ts = game:GetService("TweenService")
-    local g = script.Parent:FindFirstChildOfClass("UIGradient")
-    if g then
-        while true do
-            ts:Create(g, TweenInfo.new(3, Enum.EasingStyle.Linear), {Rotation = g.Rotation + 360}):Play()
-            task.wait(3)
+    // The Ice Hub Blue Theme Logic
+    const iceHubLogic = `\n-- Ice Hub Theme Applied
+task.spawn(function()
+    local function apply(gui)
+        for _, v in ipairs(gui:GetDescendants()) do
+            if v:IsA("UIGradient") then
+                v.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 160, 255)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
+                })
+                -- Rotating Gradient Logic
+                task.spawn(function()
+                    while v and v.Parent do
+                        v.Rotation = v.Rotation + 1
+                        task.wait(0.03)
+                    end
+                end)
+            elseif v:IsA("TextButton") then
+                v.BackgroundColor3 = Color3.fromRGB(0, 70, 200)
+                v.TextColor3 = Color3.new(1, 1, 1)
+            end
         end
     end
+    apply(script.Parent)
 end)\n`;
 
     function processCode(source) {
-        let newCode = source;
-        const useAnim = document.getElementById('animToggle').checked;
-        
-        // 1. Randomize UI Colors
-        newCode = newCode.replace(/Color3\.(fromRGB|new)\(([^)]+)\)/g, () => {
-            const r = Math.floor(Math.random() * 255), g = Math.floor(Math.random() * 255), b = Math.floor(Math.random() * 255);
-            return `Color3.fromRGB(${r}, ${g}, ${b})`;
-        });
+        let code = source;
+        const isIce = document.getElementById('iceHubToggle').checked;
+        const isAnim = document.getElementById('animToggle').checked;
 
-        // 2. Randomize Title ONLY (Targets .Text or .Name if it looks like a Title, ignores buttons)
-        // This regex looks for strings that are being assigned to things likely to be a Title
-        newCode = newCode.replace(/(\.Title|\.HeaderText|\.MainText|TextLabel\.Text)\s*=\s*["']([^"']+)["']/g, (match, prop) => {
-            const name = randomNames[Math.floor(Math.random() * randomNames.length)];
+        // 1. Title Replacement (Matches .Text = "Something" if it looks like a title)
+        code = code.replace(/(\.Title|\.HeaderText|TextLabel\.Text)\s*=\s*["']([^"']+)["']/g, (m, prop) => {
+            const name = isIce ? "Ice Hub" : randomNames[Math.floor(Math.random() * randomNames.length)];
             return `${prop} = "${name}"`;
         });
 
-        // 3. Inject Gradient Rotation
-        newCode += gradientLogic;
+        // 2. Color Logic
+        if (isIce) {
+            code += iceHubLogic;
+        } else {
+            code = code.replace(/Color3\.(fromRGB|new)\(([^)]+)\)/g, () => {
+                return `Color3.fromRGB(${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
+            });
+        }
 
-        // 4. Inject Animation if toggled
-        if (useAnim) newCode = animCode + newCode;
+        // 3. Animation Injection
+        if (isAnim) code = animCode + code;
 
-        return newCode;
+        return code;
     }
 
     function generateOutputs() {
         const source = document.getElementById('scriptInput').value;
         const count = Math.min(Math.max(document.getElementById('fileCount').value, 3), 30);
         const wrapper = document.getElementById('outputsWrapper');
+        if (!source.trim()) return alert("Paste code!");
         
-        if (!source.trim()) return alert("Paste source!");
         wrapper.innerHTML = "";
-
         for (let i = 1; i <= count; i++) {
-            const container = document.createElement('div');
-            container.className = 'output-card';
             const id = `out_${i}`;
-            container.innerHTML = `
+            const card = document.createElement('div');
+            card.className = 'output-card';
+            card.innerHTML = `
                 <label>Variation ${i}</label>
                 <textarea id="${id}" class="output-area" readonly>${processCode(source)}</textarea>
                 <button class="copy-btn" onclick="copyText('${id}', this)">Copy Variation ${i}</button>
             `;
-            wrapper.appendChild(container);
+            wrapper.appendChild(card);
         }
     }
 
     function copyText(id, btn) {
-        const txt = document.getElementById(id);
-        txt.select();
+        const t = document.getElementById(id);
+        t.select();
         document.execCommand('copy');
         btn.innerText = "Copied!";
         btn.classList.add('success');
-        setTimeout(() => { btn.innerText = `Copy Variation ${id.split('_')[1]}`; btn.classList.remove('success'); }, 1500);
+        setTimeout(() => { btn.innerText = "Copy Variation " + id.split('_')[1]; btn.classList.remove('success'); }, 1500);
     }
 </script>
 
