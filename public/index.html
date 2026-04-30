@@ -102,7 +102,7 @@
         }
 
         .input-area { 
-            height: 250px; 
+            height: 300px; 
             width: 100%;
             background: var(--bg);
             color: #7ee787;
@@ -139,7 +139,7 @@
             border: 1px solid var(--border);
         }
 
-        .output-area { height: 180px; font-size: 11px; width: 100%; margin-bottom: 15px; background: var(--bg); color: #c9d1d9; border: 1px solid var(--border); }
+        .output-area { height: 200px; font-size: 11px; width: 100%; margin-bottom: 15px; background: var(--bg); color: #c9d1d9; border: 1px solid var(--border); padding: 10px; border-radius: 5px; }
 
         .copy-btn {
             width: 100%;
@@ -165,32 +165,22 @@
     </div>
 
     <div class="setting-group">
-        <label>ANIMATION:</label>
-        <div class="switch-container">
-            <span style="font-size: 12px;">Intro UI</span>
-            <label class="switch">
-                <input type="checkbox" id="animToggle">
-                <span class="slider"></span>
-            </label>
-        </div>
-    </div>
-
-    <div class="setting-group">
         <label>PRINTS:</label>
         <div class="switch-container">
             <span>Enabled</span>
             <label class="switch">
-                <input type="checkbox" id="printToggle">
+                <input type="checkbox" id="printToggle" checked>
                 <span class="slider"></span>
             </label>
         </div>
+        <label>AMOUNT:</label>
         <input type="number" id="printAmount" value="5" min="1" max="100">
     </div>
 
     <div class="setting-group">
         <label>FONT RANDOMISER:</label>
         <div class="switch-container">
-            <span>Per-Line Random</span>
+            <span>Unique Per Line</span>
             <label class="switch">
                 <input type="checkbox" id="fontToggle">
                 <span class="slider"></span>
@@ -204,7 +194,7 @@
         <h1>Limited Ext Generator</h1>
         <textarea id="scriptInput" class="input-area" placeholder="Paste source here..."></textarea>
         
-        <button class="gen-btn" onclick="generateOutputs()">Confirm & Generate</button>
+        <button class="gen-btn" onclick="generateOutputs()">Generate Varied Scripts</button>
 
         <div id="outputsWrapper" class="outputs-grid"></div>
     </div>
@@ -215,53 +205,54 @@
     const robloxFonts = ["Enum.Font.GothamBold", "Enum.Font.GothamMedium", "Enum.Font.Arcade", "Enum.Font.Fantasy", "Enum.Font.SciFi", "Enum.Font.Code", "Enum.Font.Highway", "Enum.Font.Bangers", "Enum.Font.Creepster", "Enum.Font.LuckiestGuy"];
 
     function processCode(source) {
-        let code = source;
+        let lines = source.split('\n');
         const usePrint = document.getElementById('printToggle').checked;
         const printCount = document.getElementById('printAmount').value;
         const useFont = document.getElementById('fontToggle').checked;
 
-        // 1. Randomize Color3.fromRGB
-        code = code.replace(/Color3\.fromRGB\(\d+,\s*\d+,\s*\d+\)/g, () => {
-            return `Color3.fromRGB(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`;
-        });
+        let processedLines = lines.map(line => {
+            let newLine = line;
 
-        const lines = code.split('\n');
-        for (let i = 0; i < lines.length; i++) {
-            let line = lines[i];
+            // 1. Color3 Randomizer
+            newLine = newLine.replace(/Color3\.fromRGB\(\d+,\s*\d+,\s*\d+\)/g, () => {
+                return `Color3.fromRGB(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`;
+            });
 
-            // 2. Randomize Titles (Strictly exclude lines mentioning buttons)
-            const isButtonLine = /button|click|btn|toggle/i.test(line);
+            // 2. Title Randomizer - STRICT EXCLUSION
+            // Skips any line containing button, btn, mouse, or click keywords
+            const isForbidden = /button|btn|click|mouse|toggle/i.test(newLine);
             
-            if (line.includes(".Text") && !isButtonLine) {
-                line = line.replace(/"([^"]+)"/, () => {
+            if (newLine.includes(".Text") && !isForbidden) {
+                newLine = newLine.replace(/"([^"]+)"/, () => {
                     return `"${randomNames[Math.floor(Math.random() * randomNames.length)]}"`;
                 });
             }
-            
-            // 3. Randomize Fonts (Every single font property gets a new random choice)
-            if (useFont && line.includes(".Font")) {
-                line = line.replace(/Enum\.Font\.[a-zA-Z]+/g, () => {
+
+            // 3. Font Randomizer - UNIQUE per call
+            if (useFont && newLine.includes(".Font")) {
+                newLine = newLine.replace(/Enum\.Font\.[a-zA-Z]+/g, () => {
                     return robloxFonts[Math.floor(Math.random() * robloxFonts.length)];
                 });
             }
-            
-            lines[i] = line;
-        }
-        code = lines.join('\n');
+
+            return newLine;
+        });
+
+        let finalCode = processedLines.join('\n');
 
         // 4. Inject Prints
         if (usePrint) {
-            code = `for i = 1, ${printCount} do print("LEAKED BY FPSL https://discord.gg/VuHrBW5q") end\n` + code;
+            finalCode = `for i = 1, ${printCount} do print("LEAKED BY FPSL https://discord.gg/VuHrBW5q") end\n` + finalCode;
         }
 
-        return code;
+        return finalCode;
     }
 
     function generateOutputs() {
         const source = document.getElementById('scriptInput').value;
         const count = document.getElementById('fileCount').value;
         const wrapper = document.getElementById('outputsWrapper');
-        if (!source.trim()) return alert("Paste code!");
+        if (!source.trim()) return alert("Paste code first!");
 
         wrapper.innerHTML = "";
         for (let i = 1; i <= count; i++) {
