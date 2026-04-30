@@ -6,25 +6,50 @@
     <title>Limited Ext Generator</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background-color: #0d1117;
             color: #c9d1d9;
+            margin: 0;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+        .sidebar {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #161b22;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            z-index: 100;
+        }
+        .sidebar label { font-weight: bold; font-size: 12px; display: block; margin-bottom: 5px; color: #58a6ff; }
+        .sidebar input[type="number"] {
+            width: 60px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            color: white;
+            padding: 5px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .toggle-container { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .toggle-container input { cursor: pointer; }
+
         .container {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1100px;
             background: #161b22;
             padding: 30px;
             border-radius: 12px;
             border: 1px solid #30363d;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-top: 20px;
         }
-        h1 { color: #58a6ff; text-align: center; margin-bottom: 5px; }
-        p.subtitle { text-align: center; color: #8b949e; margin-bottom: 25px; }
+        h1 { color: #58a6ff; text-align: center; margin: 0; }
+        .subtitle { text-align: center; color: #8b949e; margin-bottom: 20px; font-size: 14px; }
         
         textarea {
             width: 100%;
@@ -33,16 +58,13 @@
             border: 1px solid #30363d;
             border-radius: 8px;
             padding: 12px;
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Courier New', monospace;
             resize: vertical;
             box-sizing: border-box;
         }
         .input-area { height: 180px; margin-bottom: 20px; }
         
-        .controls {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+        .controls { text-align: center; margin-bottom: 30px; }
         .gen-btn {
             background-color: #238636;
             color: white;
@@ -52,133 +74,222 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 18px;
-            transition: transform 0.2s, background 0.2s;
         }
-        .gen-btn:hover { background-color: #2ea043; transform: scale(1.02); }
+        .gen-btn:hover { background-color: #2ea043; }
 
         .outputs-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
+            width: 100%;
         }
         .output-card {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
             display: flex;
             flex-direction: column;
         }
-        .output-card label {
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: #58a6ff;
-            font-weight: bold;
-        }
-        .output-area { height: 250px; font-size: 12px; margin-bottom: 10px; }
-
+        .output-card label { margin-bottom: 8px; color: #58a6ff; font-weight: bold; }
+        .output-area { height: 200px; font-size: 11px; margin-bottom: 10px; }
         .copy-btn {
-            background-color: #30363d;
-            color: #c9d1d9;
+            background: #30363d;
+            color: white;
             border: 1px solid #8b949e;
             padding: 8px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 13px;
-            transition: all 0.2s;
         }
-        .copy-btn:hover { background-color: #444c56; border-color: #c9d1d9; }
-        .copy-btn.success { background-color: #238636; border-color: #238636; color: white; }
-
-        @media (max-width: 768px) {
-            .outputs-grid { grid-template-columns: 1fr; }
-        }
+        .copy-btn.success { background: #238636; }
     </style>
 </head>
 <body>
 
+<div class="sidebar">
+    <label>FILES:</label>
+    <input type="number" id="fileCount" value="3" min="3" max="30">
+    
+    <label>ANIMATION:</label>
+    <div class="toggle-container">
+        <span>NO</span>
+        <input type="checkbox" id="animToggle">
+        <span>YES</span>
+    </div>
+</div>
+
 <div class="container">
     <h1>Limited Ext Generator</h1>
-    <p class="subtitle">Paste source, randomize themes, and copy your favorites</p>
+    <p class="subtitle">Only modifies Titles and Colors. Buttons remain intact.</p>
     
     <textarea id="scriptInput" class="input-area" placeholder="Paste Roblox Script Source Here..."></textarea>
     
     <div class="controls">
-        <button class="gen-btn" onclick="generateOutputs()">Confirm & Generate Trio</button>
+        <button class="gen-btn" onclick="generateOutputs()">Confirm & Generate</button>
     </div>
 
-    <div class="outputs-grid">
-        <!-- Variation 1 -->
-        <div class="output-card">
-            <label>Variation A</label>
-            <textarea id="out1" class="output-area" readonly placeholder="Waiting..."></textarea>
-            <button class="copy-btn" onclick="copyToClipboard('out1', this)">Copy Variation A</button>
-        </div>
-        <!-- Variation 2 -->
-        <div class="output-card">
-            <label>Variation B</label>
-            <textarea id="out2" class="output-area" readonly placeholder="Waiting..."></textarea>
-            <button class="copy-btn" onclick="copyToClipboard('out2', this)">Copy Variation B</button>
-        </div>
-        <!-- Variation 3 -->
-        <div class="output-card">
-            <label>Variation C</label>
-            <textarea id="out3" class="output-area" readonly placeholder="Waiting..."></textarea>
-            <button class="copy-btn" onclick="copyToClipboard('out3', this)">Copy Variation C</button>
-        </div>
-    </div>
+    <div id="outputsWrapper" class="outputs-grid"></div>
 </div>
 
 <script>
-    const randomNames = [
-        "Nebula-X", "CrimsonV2", "Hyperion", "FrostByte", "ShadowStep", 
-        "Enigma", "ZenithHub", "Exodus", "Titanium", "Velocity", 
-        "Obsidian", "Phantom", "Atlas", "Omega", "Viper", "Ethereal", "Void", "Specter"
-    ];
+    const randomNames = ["Nebula-X", "CrimsonV2", "Hyperion", "FrostByte", "ShadowStep", "Enigma", "ZenithHub", "Exodus", "Titanium", "Velocity", "Obsidian", "Phantom", "Atlas", "Omega", "Viper"];
 
-    function getRandomColor() {
-        const r = Math.floor(Math.random() * 255);
-        const g = Math.floor(Math.random() * 255);
-        const b = Math.floor(Math.random() * 255);
-        return `Color3.fromRGB(${r}, ${g}, ${b})`;
-    }
+    const animCode = `task.spawn(function()
+    local TweenService = game:GetService('TweenService')
+    local UserInputService = game:GetService('UserInputService')
+    local Players = game:GetService('Players')
+    local player = Players.LocalPlayer
+    local playerGui = player:WaitForChild('PlayerGui')
+    local screenGui = Instance.new('ScreenGui')
+
+    screenGui.Name = 'FPSL_Leak'
+    screenGui.ResetOnSpawn = false
+    screenGui.IgnoreGuiInset = true
+    screenGui.DisplayOrder = 999999
+    screenGui.Parent = playerGui
+
+    local bg = Instance.new('Frame')
+    bg.Size = UDim2.new(1, 0, 1, 0)
+    bg.BackgroundColor3 = Color3.new(0, 0, 0)
+    bg.BorderSizePixel = 0
+    bg.BackgroundTransparency = 1
+    bg.Parent = screenGui
+
+    local leakText = Instance.new('TextLabel')
+    leakText.Size = UDim2.new(1, 0, 0.4, 0)
+    leakText.Position = UDim2.new(0, 0, 0.3, 0)
+    leakText.BackgroundTransparency = 1
+    leakText.Text = 'Leaked by fpsl'
+    leakText.TextColor3 = Color3.new(1, 1, 1)
+    leakText.TextScaled = true
+    leakText.Font = Enum.Font.GothamBold
+    leakText.TextTransparency = 1
+    leakText.Parent = bg
+
+    local discordText = Instance.new('TextLabel')
+    discordText.Size = UDim2.new(1, 0, 0.4, 0)
+    discordText.Position = UDim2.new(0, 0, 0.3, 0)
+    discordText.BackgroundTransparency = 1
+    discordText.Text = 'discord.gg/freesources'
+    discordText.TextColor3 = Color3.new(1, 1, 1)
+    discordText.TextScaled = true
+    discordText.Font = Enum.Font.GothamBold
+    discordText.TextTransparency = 1
+    discordText.Parent = bg
+
+    local skipBtn = Instance.new('TextButton')
+    skipBtn.Size = UDim2.new(0.18, 0, 0.09, 0)
+    skipBtn.Position = UDim2.new(0.41, 0, 0.78, 0)
+    skipBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    skipBtn.Text = 'Skip'
+    skipBtn.TextColor3 = Color3.new(1, 1, 1)
+    skipBtn.TextScaled = true
+    skipBtn.Font = Enum.Font.GothamSemibold
+    skipBtn.BorderSizePixel = 0
+    skipBtn.BackgroundTransparency = 1
+    skipBtn.Visible = false
+    skipBtn.Parent = bg
+
+    local corner = Instance.new('UICorner')
+    corner.CornerRadius = UDim.new(0, 12)
+    corner.Parent = skipBtn
+
+    local fadeIn = TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    local fadeOut = TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+
+    local function tween(obj, props, info)
+        TweenService:Create(obj, info, props):Play()
+    end
+
+    tween(bg, {BackgroundTransparency = 0}, fadeIn)
+    task.wait(0.4)
+    tween(leakText, {TextTransparency = 0}, fadeIn)
+    task.wait(1.5)
+    tween(leakText, {TextTransparency = 1}, fadeOut)
+    task.wait(0.6)
+    tween(discordText, {TextTransparency = 0}, fadeIn)
+    skipBtn.Visible = true
+    tween(skipBtn, {BackgroundTransparency = 0, TextTransparency = 0}, fadeIn)
+
+    local function skipLeak()
+        if setclipboard then setclipboard('discord.gg/freesources') end
+        skipBtn.Text = 'join for more.'
+        task.wait(1.5)
+        tween(bg, {BackgroundTransparency = 1}, fadeOut)
+        tween(discordText, {TextTransparency = 1}, fadeOut)
+        tween(skipBtn, {BackgroundTransparency = 1, TextTransparency = 1}, fadeOut)
+        task.wait(1.1)
+        screenGui:Destroy()
+    end
+
+    skipBtn.MouseButton1Click:Connect(skipLeak)
+end)\n\n`;
+
+    const gradientLogic = `\ntask.spawn(function()
+    local ts = game:GetService("TweenService")
+    local g = script.Parent:FindFirstChildOfClass("UIGradient")
+    if g then
+        while true do
+            ts:Create(g, TweenInfo.new(3, Enum.EasingStyle.Linear), {Rotation = g.Rotation + 360}):Play()
+            task.wait(3)
+        end
+    end
+end)\n`;
 
     function processCode(source) {
         let newCode = source;
-        // Randomize Colors
-        const colorRegex = /Color3\.(fromRGB|new)\(([^)]+)\)/g;
-        newCode = newCode.replace(colorRegex, () => getRandomColor());
-
-        // Randomize Titles/Names
-        const nameRegex = /(\.Name|\.Text)\s*=\s*["']([^"']+)["']/g;
-        newCode = newCode.replace(nameRegex, (match, property) => {
-            const newName = randomNames[Math.floor(Math.random() * randomNames.length)];
-            return `${property} = "${newName}"`;
+        const useAnim = document.getElementById('animToggle').checked;
+        
+        // 1. Randomize UI Colors
+        newCode = newCode.replace(/Color3\.(fromRGB|new)\(([^)]+)\)/g, () => {
+            const r = Math.floor(Math.random() * 255), g = Math.floor(Math.random() * 255), b = Math.floor(Math.random() * 255);
+            return `Color3.fromRGB(${r}, ${g}, ${b})`;
         });
+
+        // 2. Randomize Title ONLY (Targets .Text or .Name if it looks like a Title, ignores buttons)
+        // This regex looks for strings that are being assigned to things likely to be a Title
+        newCode = newCode.replace(/(\.Title|\.HeaderText|\.MainText|TextLabel\.Text)\s*=\s*["']([^"']+)["']/g, (match, prop) => {
+            const name = randomNames[Math.floor(Math.random() * randomNames.length)];
+            return `${prop} = "${name}"`;
+        });
+
+        // 3. Inject Gradient Rotation
+        newCode += gradientLogic;
+
+        // 4. Inject Animation if toggled
+        if (useAnim) newCode = animCode + newCode;
+
         return newCode;
     }
 
     function generateOutputs() {
         const source = document.getElementById('scriptInput').value;
-        if (!source.trim()) {
-            alert("Paste your script first!");
-            return;
+        const count = Math.min(Math.max(document.getElementById('fileCount').value, 3), 30);
+        const wrapper = document.getElementById('outputsWrapper');
+        
+        if (!source.trim()) return alert("Paste source!");
+        wrapper.innerHTML = "";
+
+        for (let i = 1; i <= count; i++) {
+            const container = document.createElement('div');
+            container.className = 'output-card';
+            const id = `out_${i}`;
+            container.innerHTML = `
+                <label>Variation ${i}</label>
+                <textarea id="${id}" class="output-area" readonly>${processCode(source)}</textarea>
+                <button class="copy-btn" onclick="copyText('${id}', this)">Copy Variation ${i}</button>
+            `;
+            wrapper.appendChild(container);
         }
-        document.getElementById('out1').value = processCode(source);
-        document.getElementById('out2').value = processCode(source);
-        document.getElementById('out3').value = processCode(source);
     }
 
-    function copyToClipboard(id, btn) {
-        const text = document.getElementById(id).value;
-        if (!text) return;
-
-        navigator.clipboard.writeText(text).then(() => {
-            const originalText = btn.innerText;
-            btn.innerText = "Copied!";
-            btn.classList.add('success');
-            
-            setTimeout(() => {
-                btn.innerText = originalText;
-                btn.classList.remove('success');
-            }, 1500);
-        });
+    function copyText(id, btn) {
+        const txt = document.getElementById(id);
+        txt.select();
+        document.execCommand('copy');
+        btn.innerText = "Copied!";
+        btn.classList.add('success');
+        setTimeout(() => { btn.innerText = `Copy Variation ${id.split('_')[1]}`; btn.classList.remove('success'); }, 1500);
     }
 </script>
 
