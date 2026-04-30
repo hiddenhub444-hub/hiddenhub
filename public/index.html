@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+=<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,7 +23,7 @@
 
         /* Sidebar Styling */
         .sidebar {
-            width: 240px;
+            width: 260px;
             background: var(--card-bg);
             height: 100vh;
             padding: 25px;
@@ -33,9 +33,9 @@
             overflow-y: auto;
         }
 
-        .sidebar h3 { font-size: 14px; color: var(--primary); margin-top: 0; margin-bottom: 20px; text-transform: uppercase; }
+        .sidebar h3 { font-size: 14px; color: var(--primary); margin-top: 0; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
 
-        .setting-group { margin-bottom: 25px; }
+        .setting-group { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #21262d; }
         
         .sidebar label { 
             font-weight: bold; 
@@ -52,7 +52,6 @@
             color: white;
             padding: 8px;
             border-radius: 5px;
-            margin-bottom: 5px;
         }
 
         /* Modern Toggle Switch */
@@ -60,14 +59,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .switch {
             position: relative;
             display: inline-block;
-            width: 40px;
-            height: 20px;
+            width: 34px;
+            height: 18px;
         }
 
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -84,7 +83,7 @@
         .slider:before {
             position: absolute;
             content: "";
-            height: 14px; width: 14px;
+            height: 12px; width: 12px;
             left: 3px; bottom: 3px;
             background-color: white;
             transition: .4s;
@@ -92,11 +91,11 @@
         }
 
         input:checked + .slider { background-color: var(--success); }
-        input:checked + .slider:before { transform: translateX(20px); }
+        input:checked + .slider:before { transform: translateX(16px); }
 
         /* Main Content */
         .main-content {
-            margin-left: 240px;
+            margin-left: 260px;
             padding: 40px;
             width: 100%;
             box-sizing: border-box;
@@ -112,7 +111,6 @@
             padding: 15px;
             font-family: 'Courier New', monospace;
             margin-bottom: 20px;
-            resize: vertical;
         }
 
         .gen-btn {
@@ -126,14 +124,11 @@
             font-weight: bold;
             font-size: 16px;
             margin-bottom: 40px;
-            transition: background 0.2s;
         }
-
-        .gen-btn:hover { background-color: #2ea043; }
 
         .outputs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 20px;
         }
 
@@ -144,7 +139,7 @@
             border: 1px solid var(--border);
         }
 
-        .output-area { height: 180px; font-size: 11px; width: 100%; margin-bottom: 15px; background: var(--bg); color: #c9d1d9; border: 1px solid var(--border); padding: 10px; border-radius: 5px; }
+        .output-area { height: 180px; font-size: 11px; width: 100%; margin-bottom: 15px; background: var(--bg); color: #c9d1d9; border: 1px solid var(--border); }
 
         .copy-btn {
             width: 100%;
@@ -154,7 +149,6 @@
             padding: 10px;
             border-radius: 6px;
             cursor: pointer;
-            font-weight: 600;
         }
 
         .copy-btn.success { background: var(--success); color: white; border-color: var(--success); }
@@ -163,7 +157,7 @@
 <body>
 
 <div class="sidebar">
-    <h3>GENERATOR</h3>
+    <h3>SETTINGS</h3>
     
     <div class="setting-group">
         <label>FILES:</label>
@@ -173,7 +167,7 @@
     <div class="setting-group">
         <label>ANIMATION:</label>
         <div class="switch-container">
-            <span>Intro UI</span>
+            <span style="font-size: 12px;">Intro UI</span>
             <label class="switch">
                 <input type="checkbox" id="animToggle">
                 <span class="slider"></span>
@@ -190,14 +184,25 @@
                 <span class="slider"></span>
             </label>
         </div>
-        <input type="number" id="printAmount" value="5" min="1" max="100" placeholder="Amount">
+        <input type="number" id="printAmount" value="5" min="1" max="100">
+    </div>
+
+    <div class="setting-group">
+        <label>FONT RANDOMISER:</label>
+        <div class="switch-container">
+            <span>Random Fonts</span>
+            <label class="switch">
+                <input type="checkbox" id="fontToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
     </div>
 </div>
 
 <div class="main-content">
     <div class="container">
         <h1>Limited Ext Generator</h1>
-        <textarea id="scriptInput" class="input-area" placeholder="Paste source here..."></textarea>
+        <textarea id="scriptInput" class="input-area" placeholder="Paste Roblox source here..."></textarea>
         
         <button class="gen-btn" onclick="generateOutputs()">Confirm & Generate</button>
 
@@ -206,38 +211,42 @@
 </div>
 
 <script>
-    const randomNames = ["Vortex", "Nebula", "Frost", "Aether", "Shadow", "Zenith", "Titan", "Phantom"];
+    const randomNames = ["Vortex", "Nebula Hub", "FrostWare", "Aether X", "ShadowLvl", "Zenith V4", "Titanium", "Phantom Script"];
+    const robloxFonts = ["Enum.Font.GothamBold", "Enum.Font.GothamMedium", "Enum.Font.Arcade", "Enum.Font.Fantasy", "Enum.Font.SciFi", "Enum.Font.Code", "Enum.Font.Highway", "Enum.Font.Bangers"];
 
     function processCode(source) {
         let code = source;
-        const useAnim = document.getElementById('animToggle').checked;
         const usePrint = document.getElementById('printToggle').checked;
         const printCount = document.getElementById('printAmount').value;
+        const useFont = document.getElementById('fontToggle').checked;
 
-        // 1. Randomize standard Color3.fromRGB
+        // 1. Randomize Color3.fromRGB
         code = code.replace(/Color3\.fromRGB\(\d+,\s*\d+,\s*\d+\)/g, () => {
             return `Color3.fromRGB(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`;
         });
 
-        // 2. Randomize Titles (Basic .Text detection)
-        code = code.replace(/(\.Text)\s*=\s*["']([^"']+)["']/g, (match, prop, val) => {
-            if (val.length > 3) {
-                const name = randomNames[Math.floor(Math.random() * randomNames.length)];
-                return `${prop} = "${name}"`;
+        // 2. Randomize Titles ONLY (Ignores buttons by checking if the line contains 'Button')
+        const lines = code.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+            // Only replace .Text if the line doesn't mention "Button" or "Click"
+            if (lines[i].includes(".Text") && !lines[i].toLowerCase().includes("button") && !lines[i].toLowerCase().includes("click")) {
+                lines[i] = lines[i].replace(/"([^"]+)"/, () => {
+                    return `"${randomNames[Math.floor(Math.random() * randomNames.length)]}"`;
+                });
             }
-            return match;
-        });
-
-        // 3. Inject Prints at start
-        if (usePrint) {
-            const printSnippet = `for i = 1, ${printCount} do print("LEAKED BY FPSL https://discord.gg/VuHrBW5q") end\n`;
-            code = printSnippet + code;
+            
+            // 3. Randomize Fonts (if enabled)
+            if (useFont && lines[i].includes(".Font")) {
+                lines[i] = lines[i].replace(/Enum\.Font\.[a-zA-Z]+/, () => {
+                    return robloxFonts[Math.floor(Math.random() * robloxFonts.length)];
+                });
+            }
         }
+        code = lines.join('\n');
 
-        // 4. Inject Animation at start (if on)
-        if (useAnim) {
-            const animSnippet = `task.spawn(function() print("Animation Loaded") end)\n`; // Simplified placeholder
-            code = animSnippet + code;
+        // 4. Inject Prints
+        if (usePrint) {
+            code = `for i = 1, ${printCount} do print("LEAKED BY FPSL https://discord.gg/VuHrBW5q") end\n` + code;
         }
 
         return code;
@@ -269,10 +278,7 @@
         document.execCommand('copy');
         btn.innerText = "COPIED!";
         btn.classList.add('success');
-        setTimeout(() => { 
-            btn.innerText = "Copy Code"; 
-            btn.classList.remove('success'); 
-        }, 1500);
+        setTimeout(() => { btn.innerText = "Copy Code"; btn.classList.remove('success'); }, 1500);
     }
 </script>
 
