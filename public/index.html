@@ -22,18 +22,19 @@
         }
 
         .sidebar {
-            width: 260px;
+            width: 280px;
             background: var(--card-bg);
             height: 100vh;
             padding: 25px;
             border-right: 1px solid var(--border);
             position: fixed;
             box-sizing: border-box;
+            overflow-y: auto;
         }
 
         .sidebar h3 { font-size: 11px; color: var(--primary); margin-top: 0; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
 
-        .setting-group { margin-bottom: 22px; padding-bottom: 10px; border-bottom: 1px solid #21262d; }
+        .setting-group { margin-bottom: 22px; padding-bottom: 12px; border-bottom: 1px solid #21262d; }
         
         .sidebar label { font-weight: bold; font-size: 10px; display: block; margin-bottom: 8px; color: #8b949e; }
 
@@ -46,7 +47,6 @@
             border-radius: 5px;
         }
 
-        /* Modern Toggle Switches */
         .switch-container {
             display: flex;
             justify-content: space-between;
@@ -86,7 +86,7 @@
         input:checked + .slider:before { transform: translateX(16px); }
 
         .main-content {
-            margin-left: 260px;
+            margin-left: 280px;
             padding: 40px;
             width: 100%;
             box-sizing: border-box;
@@ -115,13 +115,16 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 16px;
-            margin-bottom: 40px;
+            transition: 0.2s;
         }
+
+        .gen-btn:hover { filter: brightness(1.2); }
 
         .outputs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
         }
 
         .output-card {
@@ -131,7 +134,7 @@
             border: 1px solid var(--border);
         }
 
-        .output-area { height: 180px; font-size: 11px; color: #c9d1d9; background: #000; }
+        .output-area { height: 200px; font-size: 11px; color: #c9d1d9; background: #0d1117; }
 
         .copy-btn {
             width: 100%;
@@ -141,27 +144,28 @@
             padding: 10px;
             border-radius: 6px;
             cursor: pointer;
+            font-weight: bold;
         }
 
-        .copy-btn.success { background: var(--success); color: white; border-color: var(--success); }
+        .copy-btn.success { background: var(--success); color: white; }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
-    <h3>CONTROL PANEL</h3>
+    <h3>GENERATOR CONFIG</h3>
     
     <div class="setting-group">
-        <label>FILES TO GENERATE:</label>
-        <input type="number" id="fileCount" value="3" min="1" max="30">
+        <label>TOTAL FILES:</label>
+        <input type="number" id="fileCount" value="5" min="1" max="50">
     </div>
 
     <div class="setting-group">
         <label>ANIMATION:</label>
         <div class="switch-container">
-            <span style="font-size: 11px;">Intro UI</span>
+            <span style="font-size: 11px;">Intro Sequence</span>
             <label class="switch">
-                <input type="checkbox" id="animToggle">
+                <input type="checkbox" id="animToggle" checked>
                 <span class="slider"></span>
             </label>
         </div>
@@ -176,16 +180,16 @@
                 <span class="slider"></span>
             </label>
         </div>
-        <label>PRINT AMOUNT:</label>
+        <label>PRINT LOOP:</label>
         <input type="number" id="printAmount" value="5" min="1" max="100">
     </div>
 
     <div class="setting-group">
         <label>FONT RANDOMISER:</label>
         <div class="switch-container">
-            <span style="font-size: 11px;">Random Per Line</span>
+            <span style="font-size: 11px;">Unique Per Line</span>
             <label class="switch">
-                <input type="checkbox" id="fontToggle">
+                <input type="checkbox" id="fontToggle" checked>
                 <span class="slider"></span>
             </label>
         </div>
@@ -193,19 +197,28 @@
 </div>
 
 <div class="main-content">
-    <div class="container">
-        <h1 style="margin-top: 0;">Limited Ext Generator</h1>
-        <textarea id="scriptInput" class="input-area" placeholder="Paste source code here..."></textarea>
-        
-        <button class="gen-btn" onclick="generateOutputs()">CONFIRM & GENERATE</button>
+    <h1 style="margin-top: 0;">Limited Ext Generator <span style="font-size: 14px; color: var(--primary);">1M+ Varied Combinations</span></h1>
+    <textarea id="scriptInput" class="input-area" placeholder="Paste your Roblox Lua source here..."></textarea>
+    
+    <button class="gen-btn" onclick="generateOutputs()">GENERATE UNIQUE SCRIPTS</button>
 
-        <div id="outputsWrapper" class="outputs-grid"></div>
-    </div>
+    <div id="outputsWrapper" class="outputs-grid"></div>
 </div>
 
 <script>
-    const randomNames = ["Vortex-X", "Nova Hub", "Shadow-Ware", "Aether V2", "Zenith", "Titanium", "Phantom", "Arctic Hub", "Elysium", "Void Script"];
-    const robloxFonts = ["Enum.Font.GothamBold", "Enum.Font.GothamMedium", "Enum.Font.Arcade", "Enum.Font.Fantasy", "Enum.Font.SciFi", "Enum.Font.Code", "Enum.Font.Bangers", "Enum.Font.LuckiestGuy"];
+    const pre = ["Vortex", "Nova", "Shadow", "Aether", "Zenith", "Titanium", "Phantom", "Arctic", "Elysium", "Void", "Cyber", "Frost", "Quantum", "Elite", "Prime", "Synapse", "Omega", "Hyper", "Solar", "Luna", "Project", "Secret", "Onyx", "Venom", "Acid"];
+    const mid = ["X", "Infinite", "Ultra", "Alpha", "Final", "Core", "Shift", "Power", "Delta", "Logic", "Sense", "Strike", "Flow", "Wave", "Soul", "Dark", "Light", "Neon", "Global", "Next", "Pro"];
+    const suf = ["Hub", "Ware", "V2", "V4", "X", "Script", "Edition", "Remastered", "Lite", "Premium", "External", "Internal", "Suite", "Tools", "Client", "Exploit"];
+
+    const robloxFonts = ["Enum.Font.GothamBold", "Enum.Font.GothamMedium", "Enum.Font.Arcade", "Enum.Font.Fantasy", "Enum.Font.SciFi", "Enum.Font.Code", "Enum.Font.Highway", "Enum.Font.Bangers", "Enum.Font.Creepster", "Enum.Font.LuckiestGuy"];
+
+    function generateMassiveName() {
+        const p = pre[Math.floor(Math.random() * pre.length)];
+        const m = mid[Math.floor(Math.random() * mid.length)];
+        const s = suf[Math.floor(Math.random() * suf.length)];
+        const num = Math.floor(Math.random() * 999);
+        return `${p}-${m}-${s} ${num}`;
+    }
 
     function processCode(source) {
         let lines = source.split('\n');
@@ -222,16 +235,17 @@
                 return `Color3.fromRGB(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`;
             });
 
-            // 2. ULTRA-STRICT Text Randomizer
-            // Only renames if the line contains "Title" or "Name" AND does NOT contain "Button", "Btn", "Click", or "Toggle"
-            const isButtonLine = /button|btn|click|toggle|mouse/i.test(newLine);
-            const isTitleLine = /title|name|header/i.test(newLine);
+            // 2. PROTECTIVE TEXT RANDOMIZER
+            // It only renames if "Title", "Logo", or "Header" is in the variable name.
+            // It strictly IGNORES anything with Button, Click, Btn, or Toggle.
+            const forbidden = /button|btn|click|toggle|mouse|keybind/i.test(newLine);
+            const targets = /title|logo|header|name|maintext/i.test(newLine);
 
-            if (newLine.includes(".Text") && isTitleLine && !isButtonLine) {
-                newLine = newLine.replace(/"([^"]+)"/, `"${randomNames[Math.floor(Math.random() * randomNames.length)]}"`);
+            if (newLine.includes(".Text") && targets && !forbidden) {
+                newLine = newLine.replace(/"([^"]+)"/, `"${generateMassiveName()}"`);
             }
 
-            // 3. Font Randomizer - Unique per line
+            // 3. Font Randomizer - Every font line gets a new roll
             if (useFont && newLine.includes(".Font")) {
                 newLine = newLine.replace(/Enum\.Font\.[a-zA-Z]+/g, () => {
                     return robloxFonts[Math.floor(Math.random() * robloxFonts.length)];
@@ -243,12 +257,10 @@
 
         let finalCode = processedLines.join('\n');
 
-        // 4. Animation Snippet
         if (useAnim) {
-            finalCode = `-- [ANIMATION LOADED]\ntask.spawn(function() print("UI Animation Started") end)\n` + finalCode;
+            finalCode = `-- [GUI ANIMATION ENGINE LOADED]\ntask.spawn(function() \n    print("Initialising UI...") \n    task.wait(0.5)\nend)\n` + finalCode;
         }
 
-        // 5. Print Loop
         if (usePrint) {
             finalCode = `for i = 1, ${printCount} do print("LEAKED BY FPSL https://discord.gg/VuHrBW5q") end\n` + finalCode;
         }
@@ -260,7 +272,7 @@
         const source = document.getElementById('scriptInput').value;
         const count = document.getElementById('fileCount').value;
         const wrapper = document.getElementById('outputsWrapper');
-        if (!source.trim()) return alert("Paste your code first!");
+        if (!source.trim()) return alert("No source detected!");
 
         wrapper.innerHTML = "";
         for (let i = 1; i <= count; i++) {
@@ -268,7 +280,7 @@
             const card = document.createElement('div');
             card.className = 'output-card';
             card.innerHTML = `
-                <label>VARIATION ${i}</label>
+                <label style="color:var(--primary)">UNIQUE BUILD #${i}</label>
                 <textarea id="${id}" class="output-area" readonly>${processCode(source)}</textarea>
                 <button class="copy-btn" onclick="copyText('${id}', this)">Copy Code</button>
             `;
@@ -280,7 +292,7 @@
         const area = document.getElementById(id);
         area.select();
         document.execCommand('copy');
-        btn.innerText = "COPIED!";
+        btn.innerText = "COPIED TO CLIPBOARD!";
         btn.classList.add('success');
         setTimeout(() => { btn.innerText = "Copy Code"; btn.classList.remove('success'); }, 1500);
     }
